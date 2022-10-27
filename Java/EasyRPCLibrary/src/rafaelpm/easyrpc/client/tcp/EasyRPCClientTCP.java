@@ -45,7 +45,7 @@ public class EasyRPCClientTCP extends EasyRPCClientConnection {
         try {
             SocketAddress endpoint = new InetSocketAddress(host, port);
             socket = new Socket();
-            socket.connect(endpoint, 3000);//Era 3000
+            socket.connect(endpoint, 5000);//Era 3000
             dos = new DataOutputStream(socket.getOutputStream());    
             dis = new DataInputStream(socket.getInputStream());
             return true;
@@ -86,6 +86,7 @@ public class EasyRPCClientTCP extends EasyRPCClientConnection {
     @Override
     public boolean send(byte[] data) {
         try {
+            System.out.println("=> "+data.length);
             dos.write(data);
             return true;
         } catch (IOException ex) {
@@ -96,7 +97,13 @@ public class EasyRPCClientTCP extends EasyRPCClientConnection {
 
     @Override
     public DataInputStream receive() {
-        return dis;
+        try {
+            System.out.println("<= "+dis.available());
+            return dis;
+        } catch (IOException ex) {
+            Logger.getLogger(EasyRPCClientTCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
 }

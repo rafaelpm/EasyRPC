@@ -22,6 +22,7 @@ public class ChannelClientServerTCP extends ChannelClientServer {
     @Override
     public boolean send(byte[] data) {
         try {
+            System.out.println("=> "+data.length+" bytes");
             socket.getOutputStream().write(data);
             return true;
         } catch (IOException ex) {
@@ -33,6 +34,7 @@ public class ChannelClientServerTCP extends ChannelClientServer {
     @Override
     public DataInputStream receive() {
         try {
+            System.out.println("<= "+socket.getInputStream().available()+" bytes");
             return new DataInputStream(socket.getInputStream());
         } catch (IOException ex) {
             Logger.getLogger(ChannelClientServerTCP.class.getName()).log(Level.SEVERE, null, ex);

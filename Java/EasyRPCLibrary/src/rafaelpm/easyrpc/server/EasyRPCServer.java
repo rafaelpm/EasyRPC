@@ -25,6 +25,7 @@ public class EasyRPCServer implements ReceiveDataFromClient {
             try {
                 builderFromClient.setData(channel.receive());
                 if(builderFromClient.statePackage == StatePackage.Error){
+                    System.out.println("EasyRPCServer Error Package");
                     return;
                 }
             } catch (Exception ex) {
@@ -36,6 +37,7 @@ public class EasyRPCServer implements ReceiveDataFromClient {
         for(EasyRPCBaseBindClass bindClass: classes){
             try {
                 if(bindClass.process(builderFromClient.easyPackage, bindClass)){
+                    System.out.println("EasyRPCServer Process OK");
                     break;
                 }
             } catch (Exception ex) {
@@ -45,6 +47,7 @@ public class EasyRPCServer implements ReceiveDataFromClient {
         }
         
         BuildPackageToClient buildPackageToClient = new BuildPackageToClient();
+        System.out.println("EasyRPCServer Sending Answer");
         channel.send(buildPackageToClient.toBytes(builderFromClient.easyPackage));
     }
     

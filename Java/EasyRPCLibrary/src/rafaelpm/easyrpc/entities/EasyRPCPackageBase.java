@@ -74,7 +74,14 @@ public class EasyRPCPackageBase {
     private int countEndData = 0;
     
     public boolean setData(DataInputStream dis) throws Exception {
-        if(dis.available() <= headerSize){            
+        if(dis.available() <= headerSize){ 
+            countEndData++;
+            if(countEndData >= 3){
+                countEndData = 0;
+                statePackage = StatePackage.Error;
+            }else{
+                statePackage = StatePackage.Incomplete;
+            }
             saveCache(dis);
             return false;
         }
