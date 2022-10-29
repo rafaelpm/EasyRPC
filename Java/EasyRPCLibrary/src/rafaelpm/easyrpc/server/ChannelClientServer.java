@@ -9,4 +9,5 @@ import java.io.DataInputStream;
 public abstract class ChannelClientServer {
     public abstract boolean send(byte[] data);
     public abstract DataInputStream receive();
+    public abstract void close();
 }

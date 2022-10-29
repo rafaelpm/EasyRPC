@@ -88,6 +88,7 @@ public class EasyRPCClientTCP extends EasyRPCClientConnection {
         try {
             System.out.println("=> "+data.length);
             dos.write(data);
+            dos.flush();
             return true;
         } catch (IOException ex) {
             Logger.getLogger(EasyRPCClientTCP.class.getName()).log(Level.SEVERE, null, ex);

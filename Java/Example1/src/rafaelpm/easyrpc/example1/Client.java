@@ -23,12 +23,21 @@ public class Client {
         EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
         easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
         try {
-            boolean isOK = easyRPCBaseCall.setFunctionName("sum")
+            boolean isOK = easyRPCBaseCall.setFunctionName("subtract")
+                    .setReturnType(TypeData.Integer)
+                    .setParams(10, 3)
+                    .send();
+            
+            if(isOK){
+                System.out.println(easyRPCBaseCall.easyRPCPackageReceived.returnInfo.value);
+            }
+                        
+            isOK = easyRPCBaseCall.setFunctionName("sum")
                     .setReturnType(TypeData.Integer)
                     .setParams(2, 3)
                     .send();
             
-            if(isOK){            
+            if(isOK){
                 System.out.println(easyRPCBaseCall.easyRPCPackageReceived.returnInfo.value);
             }
         } catch (Exception ex) {

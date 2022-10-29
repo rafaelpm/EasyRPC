@@ -7,6 +7,7 @@ package rafaelpm.easyrpc.entities;
 public class DataInfo {
     
     public String value;
+    public byte[] value_bin;
     public int type;
     
     public Object getValue(){

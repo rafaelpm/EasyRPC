@@ -1,12 +1,7 @@
 package rafaelpm.easyrpc.example1;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rafaelpm.easyrpc.client.EasyRPCBaseCall;
-import rafaelpm.easyrpc.client.tcp.EasyRPCClientTCP;
-import rafaelpm.easyrpc.entities.TypeData;
-import rafaelpm.easyrpc.server.EasyRPCServer;
 import rafaelpm.easyrpc.server.tcp.EasyRPCServerTCP;
 
 /**

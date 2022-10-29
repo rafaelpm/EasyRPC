@@ -46,16 +46,25 @@ public class EasyRPCBaseCall {
         if(!connection.send(builderToServer.toBytes(easyRPCPackageSend))){
             return false;
         }
-        
+                        
         BuildPackageFromServer builderFromServer = new BuildPackageFromServer();
         while(builderFromServer.statePackage != StatePackage.Complete){
+            delay_ms(100);
             builderFromServer.setData(connection.receive());
-            if(builderFromServer.statePackage == StatePackage.Error){
+            if(builderFromServer.statePackage == StatePackage.Error){                
+                finishSend();
                 return false;
             }
         }
         
+        easyRPCPackageReceived = builderFromServer.easyPackage;    
+        finishSend();
         return true;
+    }
+    
+    private void finishSend(){
+        easyRPCPackageSend = new EasyRPCPackage();
+        connection.disconnect();
     }
     
     public void delay_ms(int time){
@@ -78,9 +87,22 @@ public class EasyRPCBaseCall {
         DataInfo dataInfo;
         for(Object obj: args){
             dataInfo = new DataInfo();
-            if(obj.getClass() == Integer.class){
+            if(obj.getClass() == Integer.class || obj.getClass() == int.class){
                 dataInfo.type = TypeData.Integer.id;
                 dataInfo.value = String.valueOf(obj);
+            }else if(obj.getClass() == Float.class || obj.getClass() == float.class){
+                dataInfo.type = TypeData.Float.id;
+                dataInfo.value = String.valueOf(obj);
+            }else if(obj.getClass() == Boolean.class || obj.getClass() == boolean.class){
+                dataInfo.type = TypeData.Boolean.id;
+                dataInfo.value = String.valueOf(obj);
+            }else if(obj.getClass() == String.class || obj.getClass() == String.class){
+                dataInfo.type = TypeData.String.id;
+                dataInfo.value = String.valueOf(obj);
+            }else if(obj.getClass() == byte[].class){
+                dataInfo.type = TypeData.BinaryArray.id;
+                dataInfo.value_bin = (byte[])obj;                
+                
             }else{
                 throw new Exception(EasyRPCError.TypeNotFound.description);
             }

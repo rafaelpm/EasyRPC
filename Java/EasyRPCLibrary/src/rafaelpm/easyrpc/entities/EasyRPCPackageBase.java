@@ -25,6 +25,18 @@ public class EasyRPCPackageBase {
     
     private ByteArrayOutputStream cache;
     
+    protected byte[] getBinary(DataInputStream dis) throws IOException{
+        int size = dis.readShort();
+        byte[] buffer = new byte[size];
+        dis.read(buffer);
+        return buffer;
+    }
+    
+    protected void setBinary(byte[] buffer, DataOutputStream dos) throws IOException{
+        dos.writeShort(buffer.length);
+        dos.write(buffer);
+    }
+    
     protected String getString(DataInputStream dis) throws IOException{
         int sizeName = dis.readByte();        
         byte[] bufferName = new byte[sizeName];

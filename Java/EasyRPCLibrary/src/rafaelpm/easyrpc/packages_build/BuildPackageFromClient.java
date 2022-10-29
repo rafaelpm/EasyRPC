@@ -7,6 +7,7 @@ import rafaelpm.easyrpc.entities.DataInfo;
 import rafaelpm.easyrpc.entities.EasyRPCPackage;
 import rafaelpm.easyrpc.entities.EasyRPCPackageBase;
 import rafaelpm.easyrpc.entities.EasyRPCError;
+import rafaelpm.easyrpc.entities.TypeData;
 
 /**
  *
@@ -26,11 +27,15 @@ public class BuildPackageFromClient extends EasyRPCPackageBase {
         easyPackage.returnInfo = new DataInfo();
         easyPackage.returnInfo.type = dis.readByte();
 
-        DataInfo dataInfo;
+        DataInfo dataInfo;        
         while(dis.available() > 0){
             dataInfo = new DataInfo();
             dataInfo.type = dis.readByte();
-            dataInfo.value = getString(dis);
+            if(dataInfo.type == TypeData.BinaryArray.id){                
+                dataInfo.value_bin = getBinary(dis);
+            }else{
+                dataInfo.value = getString(dis);
+            }
             easyPackage.params.add(dataInfo);
         }
         return true;

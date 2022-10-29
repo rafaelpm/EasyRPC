@@ -6,7 +6,11 @@ package rafaelpm.easyrpc.entities;
  */
 public enum TypeData {
     Void(0,"Void"),
-    Integer(1,"Integer");
+    Integer(1,"Integer"),
+    Float(2,"Float"),
+    Boolean(3,"Boolean"),
+    String(4,"String"),
+    BinaryArray(5,"BinaryArray");
     
     public int id;
     public String name;

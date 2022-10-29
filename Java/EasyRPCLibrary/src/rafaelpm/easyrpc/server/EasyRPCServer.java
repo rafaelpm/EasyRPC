@@ -23,6 +23,7 @@ public class EasyRPCServer implements ReceiveDataFromClient {
         BuildPackageFromClient builderFromClient = new BuildPackageFromClient();
         while(builderFromClient.statePackage != StatePackage.Complete){
             try {
+                delay_ms(100);
                 builderFromClient.setData(channel.receive());
                 if(builderFromClient.statePackage == StatePackage.Error){
                     System.out.println("EasyRPCServer Error Package");
@@ -49,8 +50,13 @@ public class EasyRPCServer implements ReceiveDataFromClient {
         BuildPackageToClient buildPackageToClient = new BuildPackageToClient();
         System.out.println("EasyRPCServer Sending Answer");
         channel.send(buildPackageToClient.toBytes(builderFromClient.easyPackage));
+        channel.close();
     }
     
-    
+    public void delay_ms(int time){
+        try{
+            Thread.sleep(time);
+        }catch(Exception e){}
+    }
     
 }

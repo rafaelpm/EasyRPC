@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import rafaelpm.easyrpc.entities.DataInfo;
 import rafaelpm.easyrpc.entities.EasyRPCPackage;
 import rafaelpm.easyrpc.entities.EasyRPCPackageBase;
+import rafaelpm.easyrpc.entities.TypeData;
 
 /**
  *
@@ -21,7 +22,11 @@ public class BuildPackageToServer extends EasyRPCPackageBase {
             
             for(DataInfo dataInfo: easyPackage.params){
                 dos.writeByte(dataInfo.type);
-                setString(dataInfo.value, dos);
+                if(dataInfo.type == TypeData.BinaryArray.id){
+                    setBinary(dataInfo.value_bin, dos);
+                }else{
+                    setString(dataInfo.value, dos);
+                }
             }
             
         }catch(Exception e){
