@@ -89,9 +89,8 @@ public abstract class EasyRPCBaseBindClass {
             if(m.toString().contains("hasMethod")){
                 continue;
             }
-            System.out.println(m.toString());
-            if(m.toString().contains(methodName)){
-             
+            //System.out.println(m.toString());
+            if(m.toString().contains(methodName)){             
                 return m;
             }
         }

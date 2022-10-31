@@ -86,7 +86,7 @@ public class EasyRPCClientTCP extends EasyRPCClientConnection {
     @Override
     public boolean send(byte[] data) {
         try {
-            System.out.println("=> "+data.length);
+            //System.out.println("=> "+data.length);
             dos.write(data);
             dos.flush();
             return true;
@@ -99,9 +99,9 @@ public class EasyRPCClientTCP extends EasyRPCClientConnection {
     @Override
     public DataInputStream receive() {
         try {
-            System.out.println("<= "+dis.available());
+            //System.out.println("<= "+dis.available());
             return dis;
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(EasyRPCClientTCP.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

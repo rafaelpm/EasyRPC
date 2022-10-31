@@ -64,7 +64,7 @@ public class EasyRPCBaseCall {
     
     private void finishSend(){
         easyRPCPackageSend = new EasyRPCPackage();
-        connection.disconnect();
+        //connection.disconnect();
     }
     
     public void delay_ms(int time){

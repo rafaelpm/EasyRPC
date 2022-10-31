@@ -32,7 +32,7 @@ public class ChannelClientServerTCP extends ChannelClientServer {
     @Override
     public boolean send(byte[] data) {
         try {
-            System.out.println("=> "+data.length+" bytes");
+            //System.out.println("=> "+data.length+" bytes");
             if(socket == null){
                 return false;
             }
@@ -51,12 +51,25 @@ public class ChannelClientServerTCP extends ChannelClientServer {
             return null;
         }
         try {
-            System.out.println("<= "+dis.available()+" bytes");
+            //System.out.println("<= "+dis.available()+" bytes");
             return dis;
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ChannelClientServerTCP.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    @Override
+    public boolean hasData(){
+        if(!isConnected()){
+            return false;
+        }
+        try {
+            return dis.available() > 0;
+        } catch (IOException ex) {
+            //Logger.getLogger(ChannelClientServerTCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     @Override
@@ -87,6 +100,14 @@ public class ChannelClientServerTCP extends ChannelClientServer {
                 Logger.getLogger(ChannelClientServerTCP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        if(socket == null || dis == null || dos == null){
+            return false;
+        }
+        return socket.isConnected();
     }
     
 }

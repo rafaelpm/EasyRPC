@@ -7,9 +7,8 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rafaelpm.easyrpc.server.EasyRPCBaseBindClass;
-import rafaelpm.easyrpc.server.EasyRPCServer;
+import rafaelpm.easyrpc.server.EasyRPCServerParser;
 import rafaelpm.easyrpc.server.EasyRPCServerConnection;
-import rafaelpm.easyrpc.server.ReceiveDataFromClient;
 
 /**
  *
@@ -17,9 +16,8 @@ import rafaelpm.easyrpc.server.ReceiveDataFromClient;
  */
 public class EasyRPCServerTCP extends EasyRPCServerConnection implements Runnable {
     
-    private ServerSocket socket;
-    public ReceiveDataFromClient receiveDataFromClient;
-    public EasyRPCServer easyRPCServer;
+    private ServerSocket socket;    
+    public EasyRPCServerParser easyRPCServerMatriz;
     
     public EasyRPCServerTCP(){
         
@@ -31,21 +29,24 @@ public class EasyRPCServerTCP extends EasyRPCServerConnection implements Runnabl
     }
     
     public EasyRPCServerTCP setPort(int port) throws IOException {
-        socket = new ServerSocket(port);
-        easyRPCServer = new EasyRPCServer();
-        easyRPCServer.connection = this;
-        receiveDataFromClient = easyRPCServer;
+        socket = new ServerSocket(port);        
+        if(easyRPCServerMatriz == null){
+            easyRPCServerMatriz = new EasyRPCServerParser();
+        }        
         return this;
     }
     
     public EasyRPCServerTCP addClass(EasyRPCBaseBindClass classObj) {
-        easyRPCServer.classes.add(classObj);
+        if(easyRPCServerMatriz == null){
+            easyRPCServerMatriz = new EasyRPCServerParser();
+        }
+        easyRPCServerMatriz.classes.add(classObj);
         return this;
     }
     
-    public EasyRPCServer finish(){
+    public EasyRPCServerParser finish(){
         listen();
-        return easyRPCServer;
+        return easyRPCServerMatriz;
     }
 
     @Override
@@ -73,11 +74,10 @@ public class EasyRPCServerTCP extends EasyRPCServerConnection implements Runnabl
         while(!socket.isClosed()){
             try {                
                 newClient = socket.accept();
-                System.out.println("New client: "+newClient.getInetAddress().toString());
-                if(receiveDataFromClient != null){
-                    ChannelClientServerTCP channelClientServerTCP = new ChannelClientServerTCP(newClient);
-                    receiveDataFromClient.onData(channelClientServerTCP);
-                }            
+                System.out.println("New client: "+newClient.getInetAddress().toString()+":"+newClient.getPort());
+                ChannelClientServerTCP channelClientServerTCP = new ChannelClientServerTCP(newClient);
+                easyRPCServerMatriz.startThread(channelClientServerTCP);
+                          
             } catch (IOException ex) {
                 Logger.getLogger(EasyRPCServerTCP.class.getName()).log(Level.SEVERE, null, ex);
             }

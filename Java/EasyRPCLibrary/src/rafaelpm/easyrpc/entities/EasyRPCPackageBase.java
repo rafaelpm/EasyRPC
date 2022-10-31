@@ -16,7 +16,7 @@ public class EasyRPCPackageBase {
     protected int version = 1;
     protected int sequence = 1;
     protected int checksum;
-    protected int criptoType;
+    protected int reserved;
     protected int size;
     
     protected int mountPosition;
@@ -68,7 +68,7 @@ public class EasyRPCPackageBase {
             dos.writeByte(version);
             dos.writeByte(sequence);
             dos.writeShort(checksum);
-            dos.writeByte(criptoType);
+            dos.writeByte(reserved);
             dos.writeShort(data.length);
             dos.write(data);
             
@@ -152,8 +152,8 @@ public class EasyRPCPackageBase {
                         if(dis.available() < 1){
                             break;
                         }
-                        criptoType = dis.readByte();
-                        criptoType &= 0xFF;
+                        reserved = dis.readByte();
+                        reserved &= 0xFF;
                         mountPosition++;
                         break;
                     case 5:
