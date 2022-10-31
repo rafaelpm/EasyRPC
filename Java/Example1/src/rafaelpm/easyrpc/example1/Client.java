@@ -24,8 +24,8 @@ public class Client {
         easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
         try {
             boolean isOK = easyRPCBaseCall.setFunctionName("subtract")
-                    .setReturnType(TypeData.Integer)
-                    .setParams(10, 3)
+                    .setReturnType(TypeData.Float)
+                    .setParams(9.5, 1.5)
                     .send();
             
             if(isOK){
@@ -40,6 +40,18 @@ public class Client {
             if(isOK){
                 System.out.println(easyRPCBaseCall.easyRPCPackageReceived.returnInfo.value);
             }
+            
+            isOK = easyRPCBaseCall.setFunctionName("print")
+                    .setReturnType(TypeData.Void)
+                    .setParams("Hello server!")
+                    .send();
+            
+            isOK = easyRPCBaseCall.setFunctionName("binaryData")
+                    .setReturnType(TypeData.Void)
+                    .setParams(new byte[]{0x0A,0x0B,0x0C,0x0D})
+                    .send();
+            
+            
         } catch (Exception ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);

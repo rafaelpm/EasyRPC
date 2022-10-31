@@ -26,7 +26,7 @@ public class BuildPackageFromServer extends EasyRPCPackageBase {
         easyPackage.returnInfo.type = dis.readByte();
         if(easyPackage.returnInfo.type == TypeData.BinaryArray.id){
             easyPackage.returnInfo.value_bin = getBinary(dis);
-        }else{
+        }else if(easyPackage.returnInfo.type != TypeData.Void.id){
             easyPackage.returnInfo.value = getString(dis);
         }
 

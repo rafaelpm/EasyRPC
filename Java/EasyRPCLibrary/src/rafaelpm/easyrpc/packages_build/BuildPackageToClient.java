@@ -22,7 +22,7 @@ public class BuildPackageToClient extends EasyRPCPackageBase {
             dos.writeByte(easyPackage.returnInfo.type); 
             if(easyPackage.returnInfo.type == TypeData.BinaryArray.id){
                 setBinary(easyPackage.returnInfo.value_bin, dos);
-            }else{
+            }else if(easyPackage.returnInfo.type != TypeData.Void.id){
                 setString(easyPackage.returnInfo.value, dos);            
             }
         }catch(Exception e){

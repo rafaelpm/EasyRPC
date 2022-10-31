@@ -93,6 +93,9 @@ public class EasyRPCBaseCall {
             }else if(obj.getClass() == Float.class || obj.getClass() == float.class){
                 dataInfo.type = TypeData.Float.id;
                 dataInfo.value = String.valueOf(obj);
+            }else if(obj.getClass() == Double.class || obj.getClass() == double.class){
+                dataInfo.type = TypeData.Float.id;
+                dataInfo.value = String.valueOf(obj);
             }else if(obj.getClass() == Boolean.class || obj.getClass() == boolean.class){
                 dataInfo.type = TypeData.Boolean.id;
                 dataInfo.value = String.valueOf(obj);

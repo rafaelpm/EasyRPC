@@ -24,7 +24,7 @@ public class BuildPackageToServer extends EasyRPCPackageBase {
                 dos.writeByte(dataInfo.type);
                 if(dataInfo.type == TypeData.BinaryArray.id){
                     setBinary(dataInfo.value_bin, dos);
-                }else{
+                }else if(dataInfo.type != TypeData.Void.id){
                     setString(dataInfo.value, dos);
                 }
             }
