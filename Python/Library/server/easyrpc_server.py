@@ -1,0 +1,85 @@
+import socket
+import sys
+sys.path.append('../')
+from easyrpc_package_server import EasyRPCPackageServer
+
+class EasyRPCServer:
+
+    port = 8080
+    sock = None
+    close_server = False
+    methods = []
+    count_null_data = 0
+
+    def __init__(self, port) -> None:
+        self.port = port
+
+    def process_data(self,conn, data):
+        answer = self.check_methods(data)        
+        if len(answer) == 0:
+            return
+        print("Answer: ",answer)
+        conn.sendall(answer)
+
+    def check_methods(self, data):
+        pkt = EasyRPCPackageServer()
+        if pkt.set_data(data) == False:
+            return []
+        
+        found = False
+        for m in self.methods:            
+            if m.exist_method(pkt.method_name):
+                found = True
+                pkt.return_data = m.run_method(pkt.method_name, pkt.params)
+                break
+
+        if found == False:
+            return []
+        print("Res: ",pkt.return_data)
+        return pkt.get_answer_to_client()
+
+    def run(self):
+        if len(self.methods) == 0:
+            print("Please add methods!")
+            return
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind(('0.0.0.0', self.port))
+        self.sock.settimeout(1)
+        self.sock.listen(0)
+
+        print("EasyRPC waiting connection at port: ",self.port)
+        self.close_server = False
+        while self.close_server == False:            
+            try:
+                conn, addr = self.sock.accept()
+                if conn == None:
+                    continue                
+                print("New connection from: ",addr)
+                count_null_data = 0
+                conn_id = self.sock.fileno()                
+                while self.sock.fileno() == conn_id:
+                    data = conn.recv(1024)
+                    if self._is_disconnected(data):
+                        break
+                    
+                    self.process_data(conn, data)
+                    
+                print("Finish connection: ",addr)
+                conn.close()
+            except socket.error:                
+                continue
+            except KeyboardInterrupt:                
+                self.close_server = True
+                break
+
+        self.sock.close()
+
+    def _is_disconnected(self, data):
+        if len(data) == 0:
+            self.count_null_data+=1
+            if self.count_null_data >= 100:
+                return True
+        else:
+            self.count_null_data = 0
+        return False

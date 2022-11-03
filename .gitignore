@@ -5,3 +5,4 @@
 /Java/Example1/build/
 /Java/Example1/nbproject/private/
 *.jar
+*.pyc
