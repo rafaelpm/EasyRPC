@@ -5,6 +5,24 @@ class EasyRPCDataInfo:
     value = None
     value_bin = None
 
+    def set_param(self, v):
+        if type(v) is int:
+            self.type = EasyRPCTypeData.Integer
+            self.value = str(v)
+        elif type(v) is float:
+            self.type = EasyRPCTypeData.Float
+            self.value = str(v)
+        elif type(v) is bool:
+            self.type = EasyRPCTypeData.Boolean
+            self.value = str(v)
+        elif type(v) is str:
+            self.type = EasyRPCTypeData.String
+            self.value = v
+        else:
+            self.type = EasyRPCTypeData.BinaryArray
+            self.value_bin = v
+            
+
     def set_int(self, v):
         self.type = EasyRPCTypeData.Integer
         self.value = str(v)

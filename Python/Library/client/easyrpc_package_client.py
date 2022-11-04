@@ -45,11 +45,13 @@ class EasyRPCPackageClient(EasyRPCPackageBase):
         elif self.return_info.type != EasyRPCTypeData.Void:
             self.return_info.value = self.streamData.readString()
 
+        return True
+
     def set_return(self, type):
         self.return_info = EasyRPCDataInfo()
         self.return_info.type = type
 
-    def add_param(self, value, type):
+    def add_param(self, value):
         param = EasyRPCDataInfo()
-        param.set_int(value)
+        param.set_param(value)
         self.params += [param]
