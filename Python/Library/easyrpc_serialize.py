@@ -97,10 +97,12 @@ class EasyRPCSerialize:
         if(self.is_end_read_len(size)):
             return []
         value = self.data_read[self.index_read:(self.index_read+size)]
+        self.index_read += size
         return value
     
     def readArray(self, size):
         if(self.is_end_read_len(size)):
             return 0        
         value = self.data_read[self.index_read:(self.index_read+size)]
+        self.index_read += size
         return value

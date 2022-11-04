@@ -1,15 +1,25 @@
 import sys
 sys.path.append('../')
+sys.path.append('../server/')
 
 from server.easyrpc_base import EasyRPCBase
 from server.easyrpc_server import EasyRPCServer
 
 class Calcule(EasyRPCBase):
-    def add(self,a,b):
-        return a+b
+    def sum(self,a,b):
+        return int(a) + int(b)
 
-    def sub(self,a,b):
-        return a-b
+    def subtract(self,a,b):
+        return float(a)-float(b)
 
-server = EasyRPCServer()
-server.methods += [Calcule()]
+    def binaryData(self,data):
+        print("BinaryData => ",data)
+
+    def print(self,msg):
+        print("<= ",msg)
+
+obj = Calcule()
+
+server = EasyRPCServer(2000)
+server.methods += [obj]
+server.finish()

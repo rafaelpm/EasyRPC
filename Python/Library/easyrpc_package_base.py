@@ -33,7 +33,7 @@ class EasyRPCPackageBase:
         self.streamIn.data_read += data
 
         while(self._mount_position <= self._max_positions):
-
+            #print("pos: ",self._mount_position)
             if(self.streamIn.is_end_read()):
                 self.error = True
                 break

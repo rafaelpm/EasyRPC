@@ -16,9 +16,9 @@ public abstract class EasyRPCBaseBindClass {
     protected EasyRPCPackage answer;
     protected Method method;
     
-    public final int maxParams = 5;
+    //public final int maxParams = 5;
     
-    public EasyRPCBaseBindClass() throws Exception {
+    /*public EasyRPCBaseBindClass() throws Exception {
         testMaxParams();
     }
     
@@ -29,7 +29,7 @@ public abstract class EasyRPCBaseBindClass {
                 throw new Exception(String.format(EasyRPCError.LimitParams.description, maxParams));
             }
         }
-    }
+    }*/
         
     public boolean process(EasyRPCPackage easyRPCPackage, Object objClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         method = hasMethod(easyRPCPackage.functionName);
@@ -38,16 +38,27 @@ public abstract class EasyRPCBaseBindClass {
         }
         answer = new EasyRPCPackage();
         answer.setReturnType(easyRPCPackage.returnInfo.type);
-        
-        UglySetParam ugly = new UglySetParam();
-                
-        Object res = ugly.setParam(easyRPCPackage, objClass, method);                
+                                
+        Object res = setParam(easyRPCPackage, objClass, method);                
         
         if(easyRPCPackage.returnInfo.type != TypeData.Void.id && res != null){            
             easyRPCPackage.returnInfo.value = res.toString();
         }
         
         return true;        
+    }
+    
+    //Now beautiful!
+    private Object setParam(EasyRPCPackage easyRPCPackage, Object objClass, Method method) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Object res = null;
+        Object params[] = new Object[easyRPCPackage.params.size()];
+        
+        for(int i=0; i < easyRPCPackage.params.size(); i++){
+            params[i] = easyRPCPackage.params.get(i).getValue();
+        }
+        res = method.invoke(objClass, params);
+        
+        return res;
     }
             
     public Method hasMethod(String methodName){

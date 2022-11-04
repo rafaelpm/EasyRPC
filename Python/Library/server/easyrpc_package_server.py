@@ -23,9 +23,9 @@ class EasyRPCPackageServer(EasyRPCPackageBase):
 
         while self.streamData.is_end_read_len(3) == False:
             param = EasyRPCDataInfo()
-            param.type = self.streamData.readByte()
+            param.type = self.streamData.readByte()            
             if param.type == EasyRPCTypeData.BinaryArray:
-                param.value_bin = self.streamData.readBinaryArray()
+                param.value_bin = self.streamData.readBinaryArray()                
             else:
                 param.value = self.streamData.readString()
 
@@ -43,7 +43,7 @@ class EasyRPCPackageServer(EasyRPCPackageBase):
         if self.return_info.type == EasyRPCTypeData.BinaryArray:
             streamPackage.writeBinaryArray(self.return_info.value_bin)
         elif self.return_info.type != EasyRPCTypeData.Void:
-            streamPackage.writeString(self.return_info.value)
+            streamPackage.writeString(self.return_info.get_value_return())
 
         return self.wrapData(streamPackage.data_write)
         

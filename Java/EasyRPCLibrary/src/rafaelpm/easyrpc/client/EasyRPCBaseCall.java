@@ -23,6 +23,7 @@ public class EasyRPCBaseCall {
     }
     
     public boolean send() throws Exception{
+        easyRPCPackageReceived = null;
         if(connection == null){
             return false;
         }
@@ -64,6 +65,7 @@ public class EasyRPCBaseCall {
     
     private void finishSend(){
         easyRPCPackageSend = new EasyRPCPackage();
+        
         //connection.disconnect();
     }
     
