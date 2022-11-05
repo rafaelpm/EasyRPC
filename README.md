@@ -70,6 +70,46 @@ try {
     System.exit(0);
 }
 ```
-5) Enjoy!
 
-## Python Example, wait I'm building...
+## Python Example
+
+For server mode, follow steps:
+Import EasyRPCBase and EasyRPCServer
+```
+from server.easyrpc_base import EasyRPCBase
+from server.easyrpc_server import EasyRPCServer
+```
+Create your class and extend EasyRPCBase
+```
+class Calcule(EasyRPCBase):
+   def sum(self,a,b):
+      return int(a) + int(b)
+```
+Start server and add your class in:
+```
+server = EasyRPCServer(2000)
+server.methods += [Calcule()]
+server.finish()
+```
+
+For client mode, follow steps:
+Import EasyRPCClient and EasyRPCTypeData
+```
+from easyrpc_typedata import EasyRPCTypeData
+from easyrpc_client import EasyRPCClient
+```
+Instance EasyRPCClient and set host and port.
+```
+sut = EasyRPCClient()
+sut.connect("127.0.0.1",2000)
+```
+Call function with parameters
+```
+res = sut.call(EasyRPCTypeData.Integer,"sum",[1,2])
+```
+Check answer
+```
+res.get_value_param()
+```
+
+## Enjoy!
