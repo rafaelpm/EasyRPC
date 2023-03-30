@@ -17,7 +17,23 @@ void resetEasyRPC_Package(EasyRPCPackage* pkg) {
 	memset(&pkg->functionName[0], 0, sizeof(EasyRPCPackage));
 }
 /* ---------------------------------------------------------------------------*/
-uint8_t getNameLen(EasyRPCPackage *pkg) {
+void setEasyRPC_Param(EasyRPCPackage* pkg, DataInfo *param) {
+	if (pkg->totalParams + 1 >= EASY_RPC_PACKAGE_MAX_PARAMS) {
+		return;
+	}
+	memcpy(&pkg->params[pkg->totalParams], param, sizeof(DataInfo));
+	pkg->totalParams++;
+}
+/* ---------------------------------------------------------------------------*/
+void setEasyRPC_NameFunction(EasyRPCPackage* pkg, char* name) {
+	size_t len = strlen(name);
+	for (int i = 0; i < len; i++) {
+		pkg->functionName[i] = (uint8_t)name[i];
+	}
+	pkg->functionName[len] = 0;
+}
+/* ---------------------------------------------------------------------------*/
+uint8_t getEasyRPC_NameFunctionLen(EasyRPCPackage *pkg) {
 	uint8_t total = 0;
 	while (pkg->functionName[total] != 0) {
 		total++;

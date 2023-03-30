@@ -21,7 +21,17 @@ void wrapData(Stream* stream, byte *data, uint16_t data_len) {
 	writeArray(stream, (uint8_t *)data, data_len);	
 }
 /* ---------------------------------------------------------------------------*/
-bool getString(Stream* stream, uint8_t* contentReturn) {
+bool setEasyRPC_BinaryArray(Stream* stream, uint8_t* data, int len) {
+	if (!writeShort(stream, len)) {
+		return false;
+	}
+	if (!writeArray(stream, data, len)) {
+		return false;
+	}
+	return true;
+}
+/* ---------------------------------------------------------------------------*/
+bool getEasyRPC_String(Stream* stream, uint8_t* contentReturn) {
 	uint8_t len = 0;
 	if (!readByte(stream, &len)) {
 		return false;
@@ -32,7 +42,7 @@ bool getString(Stream* stream, uint8_t* contentReturn) {
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
-bool setString(Stream* stream, uint8_t* str, int len) {
+bool setEasyRPC_String(Stream* stream, uint8_t* str, int len) {
 	if (!writeByte(stream, len)) {
 		return false;
 	}

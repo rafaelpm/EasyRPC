@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE  
 #include <stdio.h>
 #include <string.h>//memset
 //#include "easy_rpc_package_base.h"
