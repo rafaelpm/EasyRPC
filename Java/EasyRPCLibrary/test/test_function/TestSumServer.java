@@ -1,6 +1,5 @@
 package test_function;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Assert;

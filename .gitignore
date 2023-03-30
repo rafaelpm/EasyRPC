@@ -6,3 +6,20 @@
 /Java/Example1/nbproject/private/
 *.jar
 *.pyc
+*.vsidx
+
+# Version on C
+C/EasyRPC/EasyRPC/x64
+*.suo
+*.db
+*.ipch
+read.lock
+*.exe
+*.exe.recipe
+*.obj
+*.tlog
+*.log
+*.idb
+*.pdb
+*.ilk
+
