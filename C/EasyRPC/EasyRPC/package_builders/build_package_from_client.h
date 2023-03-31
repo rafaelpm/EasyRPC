@@ -18,7 +18,7 @@ bool easyRPC_ProcessDataFromClient(Stream* stream, EasyRPCPackage* packageReturn
 			return false;
 		}
 		if (packageReturn->params[p].type == BinaryArray) {
-			if (!getEasyRPC_String(stream, (uint8_t*)&packageReturn->params[p].value[0])) {
+			if (!getEasyRPC_BinaryArray(stream, (uint8_t*)&packageReturn->params[p].value[0])) {
 				return false;
 			}
 		} else if (packageReturn->params[p].type != Void) {

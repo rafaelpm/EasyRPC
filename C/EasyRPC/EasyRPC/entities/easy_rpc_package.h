@@ -2,6 +2,7 @@
 #define _EASY_RPC_PACKAGE_H
 /* ---------------------------------------------------------------------------*/
 #include "data_info.h"
+DataInfo easyPackageParamTemp;
 
 #define EASY_RPC_PACKAGE_FUNCTION_NAME_SIZE 50
 #define EASY_RPC_PACKAGE_MAX_PARAMS 50
@@ -12,17 +13,12 @@ typedef struct {
 	int totalParams;
 	DataInfo params[EASY_RPC_PACKAGE_MAX_PARAMS];
 } EasyRPCPackage;
+
+#include "easy_rpc_package_params.h"
+#include "easy_rpc_package_return.h"
 /* ---------------------------------------------------------------------------*/
 void resetEasyRPC_Package(EasyRPCPackage* pkg) {
 	memset(&pkg->functionName[0], 0, sizeof(EasyRPCPackage));
-}
-/* ---------------------------------------------------------------------------*/
-void setEasyRPC_Param(EasyRPCPackage* pkg, DataInfo *param) {
-	if (pkg->totalParams + 1 >= EASY_RPC_PACKAGE_MAX_PARAMS) {
-		return;
-	}
-	memcpy(&pkg->params[pkg->totalParams], param, sizeof(DataInfo));
-	pkg->totalParams++;
 }
 /* ---------------------------------------------------------------------------*/
 void setEasyRPC_NameFunction(EasyRPCPackage* pkg, char* name) {
@@ -40,5 +36,10 @@ uint8_t getEasyRPC_NameFunctionLen(EasyRPCPackage *pkg) {
 	}
 	return total;
 }
+/* ---------------------------------------------------------------------------*/
+// PARAMS - BEGIN
+
+/* ---------------------------------------------------------------------------*/
+// PARAMS - END
 /* ---------------------------------------------------------------------------*/
 #endif

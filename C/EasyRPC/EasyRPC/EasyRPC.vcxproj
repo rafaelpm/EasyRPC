@@ -136,9 +136,12 @@
     <ClInclude Include="entities\data_info.h" />
     <ClInclude Include="entities\easy_rpc_package.h" />
     <ClInclude Include="entities\easy_rpc_package_base.h" />
+    <ClInclude Include="entities\easy_rpc_package_params.h" />
+    <ClInclude Include="entities\easy_rpc_package_return.h" />
     <ClInclude Include="entities\type_data.h" />
     <ClInclude Include="package_builders\build_package_from_client.h" />
     <ClInclude Include="package_builders\build_package_to_client.h" />
+    <ClInclude Include="server\easy_rpc_bind.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

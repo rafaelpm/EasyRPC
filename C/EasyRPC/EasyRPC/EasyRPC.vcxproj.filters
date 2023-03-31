@@ -19,6 +19,9 @@
     <Filter Include="Arquivos de Origem\entities">
       <UniqueIdentifier>{159e2efe-5b29-4a6e-80b6-3ee6b35f4b5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Arquivos de Origem\server">
+      <UniqueIdentifier>{d2269717-ef57-4dd2-839e-8ae74a6ddf1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tests.cpp">
@@ -42,6 +45,15 @@
       <Filter>Arquivos de Origem\entities</Filter>
     </ClInclude>
     <ClInclude Include="entities\type_data.h">
+      <Filter>Arquivos de Origem\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="server\easy_rpc_bind.h">
+      <Filter>Arquivos de Origem\server</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\easy_rpc_package_params.h">
+      <Filter>Arquivos de Origem\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\easy_rpc_package_return.h">
       <Filter>Arquivos de Origem\entities</Filter>
     </ClInclude>
   </ItemGroup>
