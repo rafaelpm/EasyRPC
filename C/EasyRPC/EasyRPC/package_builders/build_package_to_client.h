@@ -3,6 +3,12 @@
 /* ---------------------------------------------------------------------------*/
 #include "entities/easy_rpc_package_base.h"
 /* ---------------------------------------------------------------------------*/
+bool easyRPC_toBytesToClient(EasyRPCPackage* package, Stream* streamReturn);
+/* ---------------------------------------------------------------------------*/
+bool easyRPC_toBytesToServer(EasyRPCPackage* package, Stream* streamReturn) {
+	return easyRPC_toBytesToClient(package, streamReturn);
+}
+/* ---------------------------------------------------------------------------*/
 bool easyRPC_toBytesToClient(EasyRPCPackage *package, Stream* streamReturn) {
 	resetStream(streamReturn);
 	if (!setEasyRPC_String(streamReturn, &package->functionName[0], getEasyRPC_NameFunctionLen(package))) {
@@ -24,9 +30,6 @@ bool easyRPC_toBytesToClient(EasyRPCPackage *package, Stream* streamReturn) {
 
 	return true;
 }
-/* ---------------------------------------------------------------------------*/
-void buildPackageToClient_Setup() {
-	easyRPC_ToBytes = easyRPC_toBytesToClient;
-}
+
 /* ---------------------------------------------------------------------------*/
 #endif

@@ -1,8 +1,12 @@
 #ifndef _TEST_ALL_H
 #define _TEST_ALL_H
 /* ---------------------------------------------------------------------------*/
+#include "HelperClientConnection.h"
+#include "test_wrap.h"
+#include "libdebug.h"
 #include "Helpers.h"
 #include "HelperBind.h"
+
 void test_all() {
 	
 

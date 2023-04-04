@@ -1,7 +1,7 @@
 #ifndef _HELPERS_H
 #define _HELPERS_H
 /* ---------------------------------------------------------------------------*/
-#include "package_builders/build_package_from_client.h"
+#include "package_builders/build_package_from_client_or_server.h"
 #include "package_builders/build_package_to_client.h"
 /* ---------------------------------------------------------------------------*/
 Stream streamToServer, streamFromClient;

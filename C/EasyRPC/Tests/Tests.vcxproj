@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Rafael\Documents\GitHub\EasyRPC\C\EasyRPC\EasyRPC;C:\Users\Rafael\Documents\GitHub\EmbeddedCleanArch\libdebug\libdebug;C:\Users\Rafael\Documents\GitHub\EmbeddedCleanArch\libstream\libstream;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\F\Rafael\GitHub\EasyRPC\C\EasyRPC\EasyRPC;D:\F\Rafael\GitHub\EmbeddedCleanArch\libdebug\libdebug;D:\F\Rafael\GitHub\EmbeddedCleanArch\libstream\libstream</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,8 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HelperBind.h" />
+    <ClInclude Include="HelperClientConnection.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="test_all.h" />
+    <ClInclude Include="test_wrap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

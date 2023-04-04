@@ -7,18 +7,99 @@
 
 #define HEADER 0x55
 #define VERSION 1
-uint8_t sequence = 0, version = 0;
-uint16_t checksum = 0;
+uint8_t sequence = 0, version = 0, reserved = 0;
+uint16_t checksum = 0, unwrapPosition = 0, sizePackage = 0;
+#define MAX_POSITIONS 7
 /* ---------------------------------------------------------------------------*/
-void wrapData(Stream* stream, byte *data, uint16_t data_len) {
-	startToWrite(stream);
-	writeByte(stream, HEADER);
-	writeByte(stream, VERSION);
-	writeByte(stream, sequence);
-	writeShort(stream, checksum);
-	writeByte(stream, 0);//Reserved
-	writeShort(stream, data_len);
-	writeArray(stream, (uint8_t *)data, data_len);	
+
+typedef enum {
+	Unwrap_Incomplete,
+	Unwrap_Complete,
+	Unwrap_Error
+} UnwrapStates;
+/* ---------------------------------------------------------------------------*/
+typedef bool (*EasyRPC_ProcessDataCallback)(Stream* stream, EasyRPCPackage* packageReturn);
+//typedef bool (*EasyRPC_ToBytesCallback)(EasyRPCPackage *package, Stream* streamReturn);
+
+EasyRPC_ProcessDataCallback easyRPC_ProcessData;
+//EasyRPC_ToBytesCallback easyRPC_ToBytes;*/
+/* ---------------------------------------------------------------------------*/
+UnwrapStates unwrapData(Stream* streamIn, EasyRPCPackage* packageOut) {
+	resetEasyRPC_Package(packageOut);
+	byte header = 0;
+
+	while (unwrapPosition < MAX_POSITIONS) {
+		switch (unwrapPosition) {
+			case 0:
+				
+				do {					
+					if (!readByte(streamIn, &header)) {
+						return Unwrap_Incomplete;
+					}
+				} while (header != HEADER);
+				unwrapPosition++;
+				break;
+			case 1:
+				if (!readByte(streamIn, &version)) {
+					return Unwrap_Incomplete;
+				}
+				if (version > VERSION) {
+					printf("Error: Difference between protocol version:\nReceived: %d / Expected: %d\n",version, VERSION);
+					perror("Error: Difference between protocol version, details above.");
+					return Unwrap_Incomplete;
+				}
+				unwrapPosition++;
+				break;
+			case 2:
+				if (!readByte(streamIn, &sequence)) {
+					return Unwrap_Incomplete;
+				}
+				unwrapPosition++;
+				break;
+			case 3:
+				if (!readShort_Inverted(streamIn, &checksum)) {
+					return Unwrap_Incomplete;
+				}
+				unwrapPosition++;
+				break;
+			case 4:
+				if (!readByte(streamIn, &reserved)) {
+					return Unwrap_Incomplete;
+				}
+				unwrapPosition++;
+				break;
+			case 5:
+				if (!readShort_Inverted(streamIn, &sizePackage)) {
+					return Unwrap_Incomplete;
+				}
+				unwrapPosition++;
+				break;
+			case 6:
+				if (isReadEOS_Plus(streamIn, sizePackage)) {
+					return Unwrap_Incomplete;
+				}
+
+				unwrapPosition = 0;
+				if (!easyRPC_ProcessData(streamIn, packageOut)) {
+					return Unwrap_Error;
+				}
+				
+				return Unwrap_Complete;
+		}
+	}
+
+	return Unwrap_Incomplete;
+}
+/* ---------------------------------------------------------------------------*/
+void wrapData(Stream* streamOut, byte *data, uint16_t data_len) {	
+	startToWrite(streamOut);
+	writeByte(streamOut, HEADER);
+	writeByte(streamOut, VERSION);
+	writeByte(streamOut, sequence);
+	writeShort(streamOut, checksum);
+	writeByte(streamOut, 0);//Reserved
+	writeShort_Inverted(streamOut, data_len);
+	writeArray(streamOut, (uint8_t *)data, data_len);
 }
 /* ---------------------------------------------------------------------------*/
 bool setEasyRPC_BinaryArray(Stream* stream, uint8_t* data, int len) {
@@ -62,12 +143,7 @@ bool setEasyRPC_String(Stream* stream, uint8_t* str, int len) {
 	}
 	return true;
 }
-/* ---------------------------------------------------------------------------*/
-typedef bool (*EasyRPC_ProcessDataCallback)(Stream* stream, EasyRPCPackage* packageReturn);
-typedef bool (*EasyRPC_ToBytesCallback)(EasyRPCPackage *package, Stream* streamReturn);
 
-EasyRPC_ProcessDataCallback easyRPC_ProcessData;
-EasyRPC_ToBytesCallback easyRPC_ToBytes;
 /* ---------------------------------------------------------------------------*/
 #endif
 

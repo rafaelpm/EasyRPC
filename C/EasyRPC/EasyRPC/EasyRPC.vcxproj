@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Rafael\Documents\GitHub\EmbeddedCleanArch\libstream\libstream</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\F\Rafael\GitHub\EmbeddedCleanArch\libstream\libstream</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -133,13 +133,16 @@
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="client\easy_rpc_client.h" />
+    <ClInclude Include="client\easy_rpc_client_connection.h" />
+    <ClInclude Include="client\easy_rpc_client_windows_tcp.h" />
     <ClInclude Include="entities\data_info.h" />
     <ClInclude Include="entities\easy_rpc_package.h" />
     <ClInclude Include="entities\easy_rpc_package_base.h" />
     <ClInclude Include="entities\easy_rpc_package_params.h" />
     <ClInclude Include="entities\easy_rpc_package_return.h" />
     <ClInclude Include="entities\type_data.h" />
-    <ClInclude Include="package_builders\build_package_from_client.h" />
+    <ClInclude Include="package_builders\build_package_from_client_or_server.h" />
     <ClInclude Include="package_builders\build_package_to_client.h" />
     <ClInclude Include="server\easy_rpc_bind.h" />
   </ItemGroup>

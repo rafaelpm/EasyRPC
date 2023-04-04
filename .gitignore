@@ -10,6 +10,7 @@
 
 # Version on C
 C/EasyRPC/EasyRPC/x64
+C/EasyRPC/.vs
 *.suo
 *.db
 *.ipch
