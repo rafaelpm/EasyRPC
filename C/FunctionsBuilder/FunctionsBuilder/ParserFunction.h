@@ -4,17 +4,11 @@
 #include <string>
 #include <vector>
 #include "Trim.h"
+#include "TypeData.h"
 /* ---------------------------------------------------------------------------*/
 using namespace std;
-/* ---------------------------------------------------------------------------*/
-typedef enum {
-	Void = 0,
-	Integer,
-	Float,
-	Boolean,
-	String,
-	BinaryArray
-} TypeData;
+
+
 /* ---------------------------------------------------------------------------*/
 class DataInfo {
 public:
@@ -27,16 +21,19 @@ public:
 	string name;
 	DataInfo returnInfo;
 	vector<DataInfo*> params;
+	int position;
+
+	string nameFunction;
+	string contentFunction;
 };
 /* ---------------------------------------------------------------------------*/
 class ParserFunctions {
-private:
-	vector<FunctionInfo> functions;
+private:	
 	bool GetParamsContent(int after, string content, string* params, int* startParamFunction, int* endParamFunction);
-	bool GetNameFunction(int* startFunction, int* startParamFunction, string content, string* name, string* returnType);
-	TypeData ParserReturnType(string* name);
+	bool GetNameFunction(int* startFunction, int* startParamFunction, string content, string* name, string* returnType);	
 	void ExtractParams(string* paramsFull, vector<string> *paramsList);
 	void InsertParams(string* params, FunctionInfo* functionInfo);
+	TypeDataParser typeDataParser;
 
 	//Junk - Begin
 	bool HasJunkContentStartFunction(int* startFunction, int* startName, string content);
@@ -72,9 +69,12 @@ void ParserFunctions::ParserContent(string content) {
 		}
 		functionInfo = new FunctionInfo();
 		functionInfo->name = nameFunction;
-		functionInfo->returnInfo.type = ParserReturnType(&returnType);
+		functionInfo->returnInfo.type = typeDataParser.NameToType(&returnType);
+		functionInfo->position = functions.size();
 
 		InsertParams(&params, functionInfo);
+
+		functions.push_back(functionInfo);
 
 		startFunction = endParamFunction;
 	}
@@ -102,7 +102,7 @@ void ParserFunctions::InsertParams(string* params, FunctionInfo *functionInfo) {
 
 		paramInfo = new DataInfo();
 		paramInfo->name = name;
-		paramInfo->type = ParserReturnType(&typeName);
+		paramInfo->type = typeDataParser.NameToType(&typeName);
 
 		functionInfo->params.push_back(paramInfo);
 	}
@@ -128,23 +128,7 @@ void ParserFunctions::ExtractParams(string* paramsFull, vector<string> *paramsLi
 	} while (tagPosition >= 0);
 
 }
-/* ---------------------------------------------------------------------------*/
-TypeData ParserFunctions::ParserReturnType(string* name) {
-	if (strcmp(name->c_str(), "int") == 0) {
-		return Integer;
-	}else if (strcmp(name->c_str(), "float") == 0 ||
-		strcmp(name->c_str(), "double") == 0) {
-		return Float;
-	} else if (strcmp(name->c_str(), "bool") == 0) {
-		return Boolean;
-	} else if (strcmp(name->c_str(), "char*") == 0) {
-		return String;
-	} else if (strcmp(name->c_str(), "uint8_t*") == 0 ||
-		strcmp(name->c_str(), "byte") == 0) {
-		return BinaryArray;
-	}
-	return Void;
-}
+
 /* ---------------------------------------------------------------------------*/
 bool ParserFunctions::GetNameFunction(int *startFunction, int *startParamFunction, string content, string *name, string *returnType) {
 	int startName;
