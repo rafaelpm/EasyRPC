@@ -31,9 +31,13 @@ void test_client_connection() {
             return;
         }
     }
-    easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size);
+    if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) {
+        set_red("test_client_connection->easyRPC_ClientConnection_Send->Error");
+    }
 
-    easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000);
+    if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) {
+        set_red("test_client_connection->easyRPC_ClientConnection_Receive->Error");
+    }
 
     unwrapData(&streamFromServer, &packageFromServer);
     

@@ -105,9 +105,12 @@ bool easyRPC_ClientConnection_ReceiveWindowsTCP(uint8_t* data, uint16_t *bytesRe
     do {
         windowsTCP_res = recv(windowsTCP_socket, (char*)data, 512, 0);
         if (windowsTCP_res < 0) {
-            printf("Socket recv: %ld\n\n", WSAGetLastError());
-            easyRPC_ClientConnection_DisconnectWindowsTCP();
-            return false;
+            if (*bytesRead == 0) {
+                printf("Socket recv: %ld\n\n", WSAGetLastError());
+                easyRPC_ClientConnection_DisconnectWindowsTCP();
+                return false;
+            }
+            break;
         }
         *bytesRead += windowsTCP_res;
         Sleep(10);

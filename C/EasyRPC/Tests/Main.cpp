@@ -9,8 +9,8 @@ int main(int argv, char *argc)
 {
     //test_all();
 
-    test_wrap_unwrap();
-    //test_client_connection();
+    //test_wrap_unwrap();
+    test_client_connection();
     
         
     return 0;
