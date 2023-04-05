@@ -20,6 +20,7 @@ public:
 	string TypeToName(TypeData type);
 	string TypeToNameObject(TypeData type);
 	TypeData NameToType(string* name);
+	string TypeToReturnNameGetFunction(TypeData type);
 	string TypeToNameGetFunction(TypeData type);
 	string TypeToNameSetFunction(TypeData type);
 
@@ -55,6 +56,21 @@ string TypeDataParser::TypeToNameObject(TypeData type) {
 	return "Void";
 }
 /* ---------------------------------------------------------------------------*/
+string TypeDataParser::TypeToReturnNameGetFunction(TypeData type) {
+	if (type == Integer) {
+		return "getEasyRPC_Return_Integer";
+	} else if (type == Float) {
+		return "getEasyRPC_Return_Float";
+	} else if (type == Boolean) {
+		return "getEasyRPC_Return_Boolean";
+	} else if (type == String) {
+		return "getEasyRPC_Return_String";
+	} else if (type == BinaryArray) {
+		return "getEasyRPC_Return_Array";
+	}
+	return "";
+}
+/* ---------------------------------------------------------------------------*/
 string TypeDataParser::TypeToNameGetFunction(TypeData type) {
 	if (type == Integer) {
 		return "getEasyRPC_Param_Integer";
@@ -69,6 +85,7 @@ string TypeDataParser::TypeToNameGetFunction(TypeData type) {
 	}
 	return "";
 }
+
 /* ---------------------------------------------------------------------------*/
 string TypeDataParser::TypeToNameSetFunction(TypeData type) {
 	if (type == Integer) {

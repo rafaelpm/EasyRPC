@@ -18,7 +18,14 @@ public:
 	TypeData type;
 
 	string toParam() {
-		return typeDataParser.TypeToName(type) + " " + name;
+		return toParam(false);
+	}
+
+	string toParam(bool pointer) {
+		if (type == BinaryArray) {
+			return typeDataParser.TypeToName(type) + " " +(pointer ? "*":"")+ name + ", uint16_t " + name + "_len";
+		}
+		return typeDataParser.TypeToName(type) + " " + (pointer ? "*" : "") + name;
 	}
 };
 /* ---------------------------------------------------------------------------*/

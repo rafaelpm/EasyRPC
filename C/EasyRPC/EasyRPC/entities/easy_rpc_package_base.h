@@ -103,7 +103,7 @@ void wrapData(Stream* streamOut, byte *data, uint16_t data_len) {
 }
 /* ---------------------------------------------------------------------------*/
 bool setEasyRPC_BinaryArray(Stream* stream, uint8_t* data, int len) {
-	if (!writeShort(stream, len)) {
+	if (!writeShort_Inverted(stream, len)) {
 		return false;
 	}
 	if (!writeArray(stream, data, len)) {
@@ -114,7 +114,7 @@ bool setEasyRPC_BinaryArray(Stream* stream, uint8_t* data, int len) {
 /* ---------------------------------------------------------------------------*/
 bool getEasyRPC_BinaryArray(Stream* stream, uint8_t* contentReturn) {
 	uint16_t len = 0;
-	if (!readShort(stream, &len)) {
+	if (!readShort_Inverted(stream, &len)) {
 		return false;
 	}
 	if (!readArray(stream, contentReturn, len)) {

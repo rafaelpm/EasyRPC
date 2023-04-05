@@ -145,6 +145,8 @@
     <ClInclude Include="package_builders\build_package_from_client_or_server.h" />
     <ClInclude Include="package_builders\build_package_to_client.h" />
     <ClInclude Include="server\easy_rpc_bind.h" />
+    <ClInclude Include="server\easy_rpc_server.h" />
+    <ClInclude Include="server\easy_rpc_server_windows_tcp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

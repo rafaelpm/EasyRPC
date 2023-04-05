@@ -133,10 +133,12 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="easy_rpc_remote_client.h" />
     <ClInclude Include="HelperBind.h" />
     <ClInclude Include="HelperClientConnection.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="test_all.h" />
+    <ClInclude Include="test_builded_client_function.h" />
     <ClInclude Include="test_wrap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

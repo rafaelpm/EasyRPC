@@ -14,6 +14,5 @@ EasyRPC_ClientConnection_Connect easyRPC_ClientConnection_Connect;
 EasyRPC_ClientConnection_Disconnect easyRPC_ClientConnection_Disconnect;
 EasyRPC_ClientConnection_Send easyRPC_ClientConnection_Send;
 EasyRPC_ClientConnection_Receive easyRPC_ClientConnection_Receive;
-
 /* ---------------------------------------------------------------------------*/
 #endif

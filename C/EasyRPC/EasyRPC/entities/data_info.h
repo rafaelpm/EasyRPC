@@ -21,7 +21,7 @@ void setEasyRPC_DataInfo_String(char *value, DataInfo* returnDataInfo) {
 /* ---------------------------------------------------------------------------*/
 void setEasyRPC_DataInfo_Array(uint8_t* value, uint16_t len, DataInfo* returnDataInfo) {
 	returnDataInfo->type = BinaryArray;
-	memcpy(returnDataInfo->value,  value, len);
+	memcpy(returnDataInfo->value,  value, len);	
 	returnDataInfo->valueSize = len;
 }
 /* ---------------------------------------------------------------------------*/

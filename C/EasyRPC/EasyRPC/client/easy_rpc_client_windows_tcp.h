@@ -65,17 +65,18 @@ bool easyRPC_ClientConnection_ConnectWindowsTCP() {
     if (!easyRPC_ClientConnection_IsConnectedWindowsTCP()) {
         WSACleanup();
         return false;
-    }
-    
+    }    
 
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
 void easyRPC_ClientConnection_DisconnectWindowsTCP() {
-    if (easyRPC_ClientConnection_IsConnectedWindowsTCP()) {
+    if (easyRPC_ClientConnection_IsConnectedWindowsTCP()) {        
         closesocket(windowsTCP_socket);
         WSACleanup();
         windowsTCP_socket = INVALID_SOCKET;
+
+        WSAStartup(MAKEWORD(2, 2), &windowsTCP_wsaData);
     }
 }
 /* ---------------------------------------------------------------------------*/

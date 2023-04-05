@@ -68,5 +68,11 @@
     <ClInclude Include="client\easy_rpc_client_windows_tcp.h">
       <Filter>Arquivos de Origem\client</Filter>
     </ClInclude>
+    <ClInclude Include="server\easy_rpc_server_windows_tcp.h">
+      <Filter>Arquivos de Origem\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\easy_rpc_server.h">
+      <Filter>Arquivos de Origem\server</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
