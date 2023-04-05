@@ -1,10 +1,10 @@
 #include "../FunctionsBuilder/FunctionsBuilder.h"
-#include "../FunctionsBuilder/BuildFunction.h"
+#include "../FunctionsBuilder/BuildClientFunctions.h"
 
 using namespace std;
 
 int main() {
-	printf("TestBuildFunction\n");
+	printf("TestBuildClientFunctions\n");
 
 	string content = "\nint func1(int a,int b);\n";
 	content += "float func2(float a, bool b);\n";
@@ -14,7 +14,7 @@ int main() {
 	ParserFunctions* helperFunction = new ParserFunctions();
 	helperFunction->ParserContent(content);
 
-	BuildFunction* sut = new BuildFunction();
+	BuildClientFunctions* sut = new BuildClientFunctions();
 	sut->buildToContent(helperFunction);
 
 	return 0;

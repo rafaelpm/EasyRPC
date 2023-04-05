@@ -18,6 +18,7 @@ class TypeDataParser {
 
 public:
 	string TypeToName(TypeData type);
+	string TypeToNameObject(TypeData type);
 	TypeData NameToType(string* name);
 	string TypeToNameGetFunction(TypeData type);
 	string TypeToNameSetFunction(TypeData type);
@@ -37,6 +38,21 @@ string TypeDataParser::TypeToName(TypeData type) {
 		return "uint8_t *";
 	}
 	return "void";
+}
+/* ---------------------------------------------------------------------------*/
+string TypeDataParser::TypeToNameObject(TypeData type) {
+	if (type == Integer) {
+		return "Integer";
+	} else if (type == Float) {
+		return "Float";
+	} else if (type == Boolean) {
+		return "Boolean";
+	} else if (type == String) {
+		return "String";
+	} else if (type == BinaryArray) {
+		return "BinaryArray";
+	}
+	return "Void";
 }
 /* ---------------------------------------------------------------------------*/
 string TypeDataParser::TypeToNameGetFunction(TypeData type) {
@@ -80,7 +96,7 @@ TypeData TypeDataParser::NameToType(string* name) {
 	} else if (strcmp(name->c_str(), "char*") == 0) {
 		return String;
 	} else if (strcmp(name->c_str(), "uint8_t*") == 0 ||
-		strcmp(name->c_str(), "byte") == 0) {
+		strcmp(name->c_str(), "byte*") == 0) {
 		return BinaryArray;
 	}
 	return Void;

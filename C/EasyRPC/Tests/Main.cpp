@@ -5,13 +5,10 @@
 #include "test_all.h"
 
 /* ---------------------------------------------------------------------------*/
-int main(int argv, char *argc)
-{
+int main(int argv, char *argc){
     //test_all();
-
     //test_wrap_unwrap();
     test_client_connection();
-    
         
     return 0;
 }

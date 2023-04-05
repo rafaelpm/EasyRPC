@@ -1,9 +1,9 @@
-#ifndef _BUILD_FUNCTION_H
-#define _BUILD_FUNCTION_H
+#ifndef _BUILD_SERVER_FUNCTIONS_H
+#define _BUILD_SERVER_FUNCTIONS_H
 /* ---------------------------------------------------------------------------*/
 #include <string.h>
 using namespace std;
-class BuildFunction {
+class BuildServerFunctions {
 	char bufferTemp[100];
 
 	string buildAddFunctionsInList(ParserFunctions* parserFunctions);
@@ -25,15 +25,15 @@ class BuildFunction {
 	string addCodeWithSpace(string code) { return beginSpace + code; };
 
 public:
-	BuildFunction() {		
+	BuildServerFunctions() {		
 		buildBeginSpace(1,0);
 	};
-	~BuildFunction() {};
+	~BuildServerFunctions() {};
 
 	string buildToContent(ParserFunctions* parserFunctions);
 };
 /* ---------------------------------------------------------------------------*/
-string BuildFunction::buildToContent(ParserFunctions* parserFunctions) {
+string BuildServerFunctions::buildToContent(ParserFunctions* parserFunctions) {
 	string content = buildAddFunctionsInList(parserFunctions);
 
 	content += buildRunFunctionApp(parserFunctions);
@@ -48,7 +48,7 @@ string BuildFunction::buildToContent(ParserFunctions* parserFunctions) {
 	return content;
 }
 /* ---------------------------------------------------------------------------*/
-string BuildFunction::buildRunFunctionApp(ParserFunctions* parserFunctions) {
+string BuildServerFunctions::buildRunFunctionApp(ParserFunctions* parserFunctions) {
 	string content = "bool easyRPC_RunFunctionApp(EasyRPCPackage* package, int index){\n";
 	FunctionInfo* functionTemp;
 
@@ -68,7 +68,7 @@ string BuildFunction::buildRunFunctionApp(ParserFunctions* parserFunctions) {
 	return content;
 }
 /* ---------------------------------------------------------------------------*/
-string BuildFunction::buildFunctionToRunFunctionApp(FunctionInfo* function) {
+string BuildServerFunctions::buildFunctionToRunFunctionApp(FunctionInfo* function) {
 	string content = "";
 
 	buildBeginSpace(1, 2);
@@ -137,7 +137,7 @@ string BuildFunction::buildFunctionToRunFunctionApp(FunctionInfo* function) {
 	return content;
 }
 /* ---------------------------------------------------------------------------*/
-string BuildFunction::buildAddFunctionsInList(ParserFunctions* parserFunctions) {
+string BuildServerFunctions::buildAddFunctionsInList(ParserFunctions* parserFunctions) {
 	string content = "void easyRPC_AddFunctions(){\n";
 	FunctionInfo* functionTemp;
 	for (int i = 0; i < parserFunctions->functions.size(); i++) {

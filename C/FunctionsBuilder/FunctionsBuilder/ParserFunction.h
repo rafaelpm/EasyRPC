@@ -11,9 +11,15 @@ using namespace std;
 
 /* ---------------------------------------------------------------------------*/
 class DataInfo {
+private:
+	TypeDataParser typeDataParser;
 public:
 	string name;	
 	TypeData type;
+
+	string toParam() {
+		return typeDataParser.TypeToName(type) + " " + name;
+	}
 };
 /* ---------------------------------------------------------------------------*/
 class FunctionInfo {	
@@ -34,6 +40,13 @@ private:
 	void ExtractParams(string* paramsFull, vector<string> *paramsList);
 	void InsertParams(string* params, FunctionInfo* functionInfo);
 	TypeDataParser typeDataParser;
+
+	void checkPointer(string *name, string *returnType) {
+		if (name->find("*") == 0) {
+			*name = name->substr(1, name->length() - 1);
+			*returnType += "*";
+		}
+	}
 
 	//Junk - Begin
 	bool HasJunkContentStartFunction(int* startFunction, int* startName, string content);
@@ -69,6 +82,7 @@ void ParserFunctions::ParserContent(string content) {
 		}
 		functionInfo = new FunctionInfo();
 		functionInfo->name = nameFunction;
+		functionInfo->returnInfo.name = "returnValue";
 		functionInfo->returnInfo.type = typeDataParser.NameToType(&returnType);
 		functionInfo->position = functions.size();
 
@@ -99,6 +113,8 @@ void ParserFunctions::InsertParams(string* params, FunctionInfo *functionInfo) {
 		}
 		typeName = trim_str(param.substr(0, spaceIndex));
 		name = trim_str(param.substr(spaceIndex));
+
+		checkPointer(&name, &typeName);
 
 		paramInfo = new DataInfo();
 		paramInfo->name = name;
@@ -145,11 +161,12 @@ bool ParserFunctions::GetNameFunction(int *startFunction, int *startParamFunctio
 
 	*name = trim_str(content.substr(startName+1, (*startParamFunction - (startName + 1))));	
 	*returnType = trim_str(content.substr(*startFunction, startName - *startFunction));
+	checkPointer(name, returnType);
 
-	if (name->find("*") == 0){
+	/*if (name->find("*") == 0) {
 		*name = name->substr(1, name->length() - 1);
 		*returnType += "*";
-	}
+	}*/
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
