@@ -12,8 +12,27 @@ public class Temp {
     public static void main(String[] args) {           
         System.out.println("Starting client");   
         //subtract();
-        sum();
-        //binaryData();
+        //sum();
+        //printMessage();
+        binaryData();
+    }
+    
+    public static void printMessage(){
+        EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
+        easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
+        try{
+            boolean isOK = easyRPCBaseCall.setFunctionName("print")
+                    .setReturnType(TypeData.Void)
+                    .setParams("Hello server!")
+                    .send();
+            if(isOK){
+                System.out.println(easyRPCBaseCall.easyRPCPackageReceived.returnInfo.value);
+            }else{
+                System.out.println("Error");
+            }
+        }catch(Exception e){
+            
+        }
     }
     
     public static void binaryData(){

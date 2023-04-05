@@ -27,6 +27,7 @@ public:
 		}
 		return typeDataParser.TypeToName(type) + " " + (pointer ? "*" : "") + name;
 	}
+
 };
 /* ---------------------------------------------------------------------------*/
 class FunctionInfo {	

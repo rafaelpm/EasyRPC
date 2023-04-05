@@ -17,16 +17,21 @@ typedef enum {
 class TypeDataParser {
 
 public:
-	string TypeToName(TypeData type);
+	string TypeToName(TypeData type, bool withPointer);
+	string TypeToName(TypeData type) { return TypeToName(type, true); };
+
 	string TypeToNameObject(TypeData type);
 	TypeData NameToType(string* name);
+
+	string TypeToReturnNameSetFunction(TypeData type);
 	string TypeToReturnNameGetFunction(TypeData type);
+
 	string TypeToNameGetFunction(TypeData type);
 	string TypeToNameSetFunction(TypeData type);
 
 };
 /* ---------------------------------------------------------------------------*/
-string TypeDataParser::TypeToName(TypeData type) {
+string TypeDataParser::TypeToName(TypeData type, bool withPointer) {
 	if (type == Integer) {
 		return "int";
 	} else if (type == Float) {
@@ -34,9 +39,17 @@ string TypeDataParser::TypeToName(TypeData type) {
 	} else if (type == Boolean) {
 		return "bool";
 	} else if (type == String) {
-		return "char *";
+		if (withPointer) {
+			return "char *";
+		} else {
+			return "char";
+		}
 	} else if (type == BinaryArray) {
-		return "uint8_t *";
+		if (withPointer) {
+			return "uint8_t *";
+		} else {
+			return "uint8_t";
+		}
 	}
 	return "void";
 }
@@ -67,6 +80,21 @@ string TypeDataParser::TypeToReturnNameGetFunction(TypeData type) {
 		return "getEasyRPC_Return_String";
 	} else if (type == BinaryArray) {
 		return "getEasyRPC_Return_Array";
+	}
+	return "";
+}
+/* ---------------------------------------------------------------------------*/
+string TypeDataParser::TypeToReturnNameSetFunction(TypeData type) {
+	if (type == Integer) {
+		return "setEasyRPC_Return_Integer";
+	} else if (type == Float) {
+		return "setEasyRPC_Return_Float";
+	} else if (type == Boolean) {
+		return "setEasyRPC_Return_Boolean";
+	} else if (type == String) {
+		return "setEasyRPC_Return_String";
+	} else if (type == BinaryArray) {
+		return "setEasyRPC_Return_Array";
 	}
 	return "";
 }

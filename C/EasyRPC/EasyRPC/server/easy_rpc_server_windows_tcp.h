@@ -9,11 +9,17 @@
 #include "easy_rpc_server.h"
 #include "../package_builders/build_package_from_client_or_server.h"
 #include "../package_builders/build_package_to_client.h"
+#include <sys\timeb.h> 
 
 // Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
+
+#define TIMEOUT_DISCONNECT_CLIENT 1000
+bool startedTimeZeroByes = false;
+struct timeb startTimeZeroBytes, endTimeZeroBytes;
+int diff;
 
 char* windowsServerTCP_port;
 WSADATA windowsServerTCP_wsaData;
@@ -22,6 +28,8 @@ SOCKET windowsServerTCP_ClientSocket = INVALID_SOCKET;
 
 DWORD threadWaitConnectionId;
 HANDLE threadWaitConnection;
+char error_code;
+socklen_t error_code_size = sizeof(socklen_t);
 
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ServerWindowsTCP_WaitNewConnection() {
@@ -39,10 +47,21 @@ DWORD WINAPI threadWaitSocketConnection(LPVOID lpParameter) {
 	printf("Thread Wait Socket Connection\n");
 
 	resetStream(&streamOnServer);
+	unwrapPosition = 0;
 
 	while (easyRPC_ServerWindowsTCP_WaitNewConnection()) {
-		processDataOnServer();
+		printf("New Connection\n");
+		while (easyRPC_Server_IsConnected()) {
+			processDataOnServer();
+			Sleep(100);
+		}
+		printf("Close Client Socket***********\n");
+		closesocket(windowsServerTCP_ClientSocket);
+		windowsServerTCP_ClientSocket = INVALID_SOCKET;
+		printf("End Connection\n");
 	}
+
+	printf("Thread Exit\n");
 	easyRPC_Server_Close();
 	return 0;
 }
@@ -79,7 +98,6 @@ bool easyRPC_ServerWindowsTCP_Listen() {
 
 	if (listen(windowsServerTCP_ListenSocket, SOMAXCONN) == SOCKET_ERROR) {
 		printf("ListenSocket error: %ld\n", WSAGetLastError());
-		freeaddrinfo(result);
 		closesocket(windowsServerTCP_ListenSocket);
 		WSACleanup();
 		return false;
@@ -97,8 +115,12 @@ bool easyRPC_ServerWindowsTCP_Listen() {
 }
 
 /* ---------------------------------------------------------------------------*/
-bool easyRPC_ServerWindowsTCP_IsConnected() {
-	return windowsServerTCP_ClientSocket != INVALID_SOCKET;
+bool easyRPC_ServerWindowsTCP_IsConnected() {	
+	if (windowsServerTCP_ClientSocket == INVALID_SOCKET) {
+		return false;
+	}
+	
+	return true;
 }
 /* ---------------------------------------------------------------------------*/
 void easyRPC_ServerWindowsTCP_Close() {	
@@ -123,6 +145,7 @@ bool easyRPC_ServerWindowsTCP_Send(uint8_t* data, uint16_t dataLen) {
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
+
 bool easyRPC_ServerWindowsTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t timeout) {
 	struct timeval tv;
 	tv.tv_sec = timeout / 1000;
@@ -132,16 +155,34 @@ bool easyRPC_ServerWindowsTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16
 	Sleep(100);
 
 	int windowsTCP_res;
-
+	
 	*bytesRead = 0;
 	do {
 		windowsTCP_res = recv(windowsServerTCP_ClientSocket, (char*)data, 512, 0);
 		if (windowsTCP_res < 0) {
 			if (*bytesRead == 0) {
-				printf("easyRPC_ServerWindowsTCP_Receive: %ld\n\n", WSAGetLastError());				
+				//printf("easyRPC_ServerWindowsTCP_Receive: %ld\n\n", WSAGetLastError());		
+				if (!startedTimeZeroByes) {
+					startedTimeZeroByes = true;
+					ftime(&startTimeZeroBytes);
+				} else {
+					ftime(&endTimeZeroBytes);
+					diff = (int)(1000.0 * (endTimeZeroBytes.time - startTimeZeroBytes.time)
+						+ (endTimeZeroBytes.millitm - startTimeZeroBytes.millitm));
+					if (diff >= TIMEOUT_DISCONNECT_CLIENT) {
+						printf("Disconnect timeout\n");
+						startedTimeZeroByes = false;
+						if (windowsServerTCP_ClientSocket != INVALID_SOCKET) {
+							closesocket(windowsServerTCP_ClientSocket);
+							windowsServerTCP_ClientSocket = INVALID_SOCKET;
+						}
+					}
+				}
 				return false;
 			}
 			break;
+		} else {
+			startedTimeZeroByes = false;
 		}
 		*bytesRead += windowsTCP_res;
 		Sleep(10);
@@ -162,6 +203,7 @@ bool easyRPC_ServerWindowsTCP_Setup(char* port) {
 	easyRPC_Server_IsConnected = easyRPC_ServerWindowsTCP_IsConnected;
 	easyRPC_Server_Close = easyRPC_ServerWindowsTCP_Close;
 	easyRPC_Server_Receive = easyRPC_ServerWindowsTCP_Receive;
+	easyRPC_Server_Send = easyRPC_ServerWindowsTCP_Send;
 	return true;
 }
 /* ---------------------------------------------------------------------------*/

@@ -27,11 +27,15 @@ EasyRPCPackage packageServerUnwrap;
 /* ---------------------------------------------------------------------------*/
 bool processDataOnServer() {
 	
-	if (!easyRPC_Server_Receive(&streamOnServer.buffer[0], &streamOnServer.index, 1000)) {
+	if (!easyRPC_Server_Receive(&streamOnServer.buffer[0], &streamOnServer.size, 1000)) {
+		return false;
+	}
+
+	if (streamOnServer.size == 0) {
 		return false;
 	}
 	
-	if (!unwrapData(&streamOnServer, &packageServerUnwrap) != Unwrap_Complete) {
+	if (unwrapData(&streamOnServer, &packageServerUnwrap) != Unwrap_Complete) {
 		return false;
 	}
 	resetStream(&streamOnServer);
@@ -40,16 +44,16 @@ bool processDataOnServer() {
 		return false;
 	}
 
-	if (!easyRPC_toBytesToServer(&packageServerUnwrap, &streamOnServer)) {
+	if (!easyRPC_toBytesToClient(&packageServerUnwrap, &streamOnServer)) {
 		return false;
 	}
 
 	resetStream(&streamOnServerToClient);
-	wrapData(&streamOnServer, &streamOnServerToClient.buffer[0], streamOnServerToClient.size);
+	wrapData(&streamOnServerToClient, &streamOnServer.buffer[0], streamOnServer.size);
 
-	if (!easyRPC_Server_Send(&streamOnServerToClient.buffer[0], streamOnServerToClient.size)) {
-		return false;
-	}
+	easyRPC_Server_Send(&streamOnServerToClient.buffer[0], streamOnServerToClient.size);
+
+	resetStream(&streamOnServer);
 
 	return true;
 }

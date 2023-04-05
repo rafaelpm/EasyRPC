@@ -80,7 +80,7 @@ void setEasyRPC_Param_Array(EasyRPCPackage* package, uint8_t* value, uint16_t le
 	setEasyRPC_Param(package, &easyPackageParamTemp);
 }
 /* ---------------------------------------------------------------------------*/
-bool getEasyRPC_Param_Array(EasyRPCPackage* package, uint8_t* value, int position) {
+bool getEasyRPC_Param_Array(EasyRPCPackage* package, uint8_t* value, uint16_t *len, int position) {
 	if (position >= package->totalParams) {
 		return false;
 	}
@@ -88,6 +88,7 @@ bool getEasyRPC_Param_Array(EasyRPCPackage* package, uint8_t* value, int positio
 		return false;
 	}
 	memcpy(value, &package->params[position].value[0], package->params[position].valueSize);
+	*len = package->params[position].valueSize;
 	return true;
 }
 /* ---------------------------------------------------------------------------*/

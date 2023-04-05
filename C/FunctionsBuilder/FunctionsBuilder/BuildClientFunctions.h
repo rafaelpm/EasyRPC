@@ -36,6 +36,10 @@ public:
 	string buildToContent(ParserFunctions* parserFunctions);
 	string contentFile;
 
+	bool saveFileOnPath(string path) {
+		return saveFile(path + "easy_rpc_remote_client.h");
+	};
+
 	bool saveFile(string name) {
 		return saveContent.save(name, contentFile);
 	};
@@ -143,10 +147,7 @@ string BuildClientFunctions::buildHeaders() {
 	string content = addCodeWithSpace("#ifndef _EASY_RPC_REMOTE_CLIENT\n");
 	content += addCodeWithSpace("#define _EASY_RPC_REMOTE_CLIENT\n");
 	content += spaceLine();
-	content += addCodeWithSpace("#include \"client/easy_rpc_client.h\"\n");
-	content += addCodeWithSpace("#include \"package_builders/build_package_to_client.h\"\n");
-	content += addCodeWithSpace("#include \"package_builders/build_package_from_client_or_server.h\"\n");
-	
+			
 	return content;
 }
 /* ---------------------------------------------------------------------------*/

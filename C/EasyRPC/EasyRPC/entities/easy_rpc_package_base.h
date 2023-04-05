@@ -112,7 +112,7 @@ bool setEasyRPC_BinaryArray(Stream* stream, uint8_t* data, int len) {
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
-bool getEasyRPC_BinaryArray(Stream* stream, uint8_t* contentReturn) {
+bool getEasyRPC_BinaryArray(Stream* stream, uint8_t* contentReturn, uint16_t* contentLen) {
 	uint16_t len = 0;
 	if (!readShort_Inverted(stream, &len)) {
 		return false;
@@ -120,10 +120,13 @@ bool getEasyRPC_BinaryArray(Stream* stream, uint8_t* contentReturn) {
 	if (!readArray(stream, contentReturn, len)) {
 		return false;
 	}
+	if (contentLen != NULL) {
+		*contentLen = len;
+	}
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
-bool getEasyRPC_String(Stream* stream, uint8_t* contentReturn) {
+bool getEasyRPC_StringLen(Stream* stream, uint8_t* contentReturn, uint16_t* contentLen) {
 	uint8_t len = 0;
 	if (!readByte(stream, &len)) {
 		return false;
@@ -131,7 +134,16 @@ bool getEasyRPC_String(Stream* stream, uint8_t* contentReturn) {
 	if (!readArray(stream, contentReturn, len)) {
 		return false;
 	}
+	contentReturn[len] = 0;
+	if (contentLen != NULL) {
+		*contentLen = len;
+		
+	}
 	return true;
+}
+/* ---------------------------------------------------------------------------*/
+bool getEasyRPC_String(Stream* stream, uint8_t* contentReturn) {
+	return getEasyRPC_StringLen(stream, contentReturn, NULL);
 }
 /* ---------------------------------------------------------------------------*/
 bool setEasyRPC_String(Stream* stream, uint8_t* str, int len) {
