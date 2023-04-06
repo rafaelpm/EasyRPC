@@ -1,6 +1,7 @@
 #ifndef _EASY_RPC_PACKAGE_H
 #define _EASY_RPC_PACKAGE_H
 /* ---------------------------------------------------------------------------*/
+#include <string.h>
 #include "data_info.h"
 DataInfo easyPackageParamTemp;
 

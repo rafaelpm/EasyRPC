@@ -1,4 +1,5 @@
 #ifndef _EASY_RPC_SERVER_WINDOWS_TCP_H
+#ifndef LINUX
 #define _EASY_RPC_SERVER_WINDOWS_TCP_H
 /* ---------------------------------------------------------------------------*/
 #define WIN32_LEAN_AND_MEAN
@@ -207,4 +208,5 @@ bool easyRPC_ServerWindowsTCP_Setup(char* port) {
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
+#endif //LINUX
 #endif

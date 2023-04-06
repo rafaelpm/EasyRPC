@@ -26,3 +26,5 @@ read.lock
 
 /C/FunctionsBuilder/out
 /C/FunctionsBuilder/.vs
+/C/build
+/C/EasyRPC/TestsLinux/Server/build

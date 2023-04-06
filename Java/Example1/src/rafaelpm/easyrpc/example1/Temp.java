@@ -9,17 +9,40 @@ import rafaelpm.easyrpc.entities.TypeData;
  * @author Rafael
  */
 public class Temp {
+    
+    public static String host = "192.168.10.8";//"127.0.0.1";
+    public static int port = 2000;
+    
     public static void main(String[] args) {           
         System.out.println("Starting client");   
         //subtract();
-        //sum();
+        sum();
         //printMessage();
-        binaryData();
+        //binaryData();
+    }
+    
+    public static void sum(){
+        EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
+        easyRPCBaseCall.connection = new EasyRPCClientTCP(host, port);
+        try{
+            boolean isOK = easyRPCBaseCall.setFunctionName("sum")
+                    .setReturnType(TypeData.Integer)
+                    .setParams(2, 3)
+                    .send();
+            
+            if(isOK){
+                System.out.println(easyRPCBaseCall.easyRPCPackageReceived.returnInfo.value);
+            }else{
+                System.out.println("Error");
+            }
+        }catch(Exception e){
+            
+        }
     }
     
     public static void printMessage(){
         EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
-        easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
+        easyRPCBaseCall.connection = new EasyRPCClientTCP(host, port);
         try{
             boolean isOK = easyRPCBaseCall.setFunctionName("print")
                     .setReturnType(TypeData.Void)
@@ -37,7 +60,7 @@ public class Temp {
     
     public static void binaryData(){
         EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
-        easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
+        easyRPCBaseCall.connection = new EasyRPCClientTCP(host, port);
         try{
             boolean isOK = easyRPCBaseCall.setFunctionName("binaryData")
                     .setReturnType(TypeData.Void)
@@ -54,28 +77,11 @@ public class Temp {
         }
     }
     
-    public static void sum(){
-        EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
-        easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
-        try{
-            boolean isOK = easyRPCBaseCall.setFunctionName("sum")
-                    .setReturnType(TypeData.Integer)
-                    .setParams(2, 3)
-                    .send();
-            
-            if(isOK){
-                System.out.println(easyRPCBaseCall.easyRPCPackageReceived.returnInfo.value);
-            }else{
-                System.out.println("Error");
-            }
-        }catch(Exception e){
-            
-        }
-    }
+    
     
     public static void subtract(){
         EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
-        easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
+        easyRPCBaseCall.connection = new EasyRPCClientTCP(host, port);
         try{
             boolean isOK = easyRPCBaseCall.setFunctionName("subtract")
                     .setReturnType(TypeData.Float)
