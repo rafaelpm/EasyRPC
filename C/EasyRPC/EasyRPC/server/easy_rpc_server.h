@@ -8,6 +8,10 @@
 #include "../package_builders/build_package_to_client.h"
 #include "libstream.h"
 
+#ifdef _CALCULE_TIME
+#include "time_to_run.h"
+#endif
+
 typedef bool (*EasyRPC_Server_Listen)();
 typedef bool (*EasyRPC_Server_Send)(uint8_t *data, uint16_t dataLen);
 //typedef bool (*EasyRPC_Server_HasData)();
@@ -26,6 +30,10 @@ Stream streamOnServer, streamOnServerToClient;
 EasyRPCPackage packageServerUnwrap;
 /* ---------------------------------------------------------------------------*/
 bool processDataOnServer() {
+
+	#ifdef _CALCULE_TIME
+	start_time();
+	#endif
 	
 	if (!easyRPC_Server_Receive(&streamOnServer.buffer[0], &streamOnServer.size, 1000)) {
 		return false;
@@ -35,23 +43,54 @@ bool processDataOnServer() {
 		return false;
 	}
 	
+	#ifdef _CALCULE_TIME
+	end_time((char *)"Receive data");
+	start_time();
+	#endif
+
 	if (unwrapData(&streamOnServer, &packageServerUnwrap) != Unwrap_Complete) {
 		return false;
 	}
+
+	#ifdef _CALCULE_TIME
+	end_time((char *)"Unwrap data");
+	start_time();
+	#endif
+
 	resetStream(&streamOnServer);
 
 	if (!easyRPC_ProcessPackageBind(&packageServerUnwrap)) {
 		return false;
 	}
 
+	#ifdef _CALCULE_TIME
+	end_time((char *)"ProcessPackage");
+	start_time();
+	#endif
+
 	if (!easyRPC_toBytesToClient(&packageServerUnwrap, &streamOnServer)) {
 		return false;
 	}
 
+	#ifdef _CALCULE_TIME
+	end_time((char *)"Prepare answer");
+	start_time();
+	#endif
+
 	resetStream(&streamOnServerToClient);
 	wrapData(&streamOnServerToClient, &streamOnServer.buffer[0], streamOnServer.size);
 
+	#ifdef _CALCULE_TIME
+	end_time((char *)"Wrap answer");
+	start_time();
+	#endif
+
 	easyRPC_Server_Send(&streamOnServerToClient.buffer[0], streamOnServerToClient.size);
+
+	#ifdef _CALCULE_TIME
+	end_time((char *)"Send answer");
+	start_time();
+	#endif
 
 	resetStream(&streamOnServer);
 

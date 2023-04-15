@@ -1,4 +1,5 @@
 #include <stdio.h>
+#define _CALCULE_TIME
 #include "server/easy_rpc_server.h"
 #include "server/easy_rpc_server_linux_tcp.h"
 #include "easy_rpc_server_bind.h"

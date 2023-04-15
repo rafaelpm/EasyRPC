@@ -60,10 +60,18 @@ void *threadWaitSocketConnection(void *arg) {
 	resetStream(&streamOnServer);
 	unwrapPosition = 0;
 
+	bool processOK = false;
 	while (easyRPC_ServerLinuxTCP_WaitNewConnection()) {
 		printf("New Connection\n");
+		processOK = false;
 		while (easyRPC_Server_IsConnected()) {
-			processDataOnServer();
+			if(processDataOnServer()){
+				processOK = true;
+			}else{
+				if(processOK){
+					break;
+				}
+			}
 			sleep(0.1);
 		}
 		if(isLinuxServerTCP_ClientConnected){
@@ -136,7 +144,7 @@ bool easyRPC_ServerLinuxTCP_Listen() {
 
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ServerLinuxTCP_IsConnected() {	
-	try{
+	/*try{
 		int error_code;
 		socklen_t error_code_size = sizeof(socklen_t);
 		getsockopt(linuxServerTCP_ClientSocket, SOL_SOCKET, SO_ERROR, &error_code, &error_code_size);		
@@ -148,6 +156,9 @@ bool easyRPC_ServerLinuxTCP_IsConnected() {
 			isLinuxServerTCP_ClientConnected = false;
 			close(linuxServerTCP_ClientSocket);
 		}
+	}*/
+	if(isLinuxServerTCP_ClientConnected){
+		return true;
 	}
 	return isLinuxServerTCP_Connected;
 }
@@ -164,6 +175,7 @@ bool easyRPC_ServerLinuxTCP_Send(uint8_t* data, uint16_t dataLen) {
 		return false;
 	}
 
+	//MSG_NOSIGNAL = ignore error
 	if(send(linuxServerTCP_ClientSocket, data, dataLen, MSG_NOSIGNAL) < 0){
 		printf("easyRPC_ServerLinuxTCP_Send = ERROR\n");
 		isLinuxServerTCP_Connected = false;
@@ -180,13 +192,13 @@ bool easyRPC_ServerLinuxTCP_Send(uint8_t* data, uint16_t dataLen) {
 bool easyRPC_ServerLinuxTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t timeout) {
 	*bytesRead = 0;
 
-	if(!easyRPC_ServerLinuxTCP_IsConnected()){
+	/*if(!easyRPC_ServerLinuxTCP_IsConnected()){
 		return false;
-	}
+	}*/
 
 	struct timeval tv;
-	tv.tv_sec = timeout / 1000;
-	tv.tv_usec = 0;
+	//tv.tv_sec = timeout / 1000;
+	tv.tv_usec = timeout;
 	setsockopt(linuxServerTCP_ClientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
 
 	int count = 0;
