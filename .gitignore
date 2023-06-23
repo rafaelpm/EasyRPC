@@ -25,6 +25,7 @@ read.lock
 *.ilk
 
 /C/FunctionsBuilder/out
+/C/FunctionsBuilder/FunctionsBuilder/build
 /C/FunctionsBuilder/.vs
 /C/build
 /C/EasyRPC/TestsLinux/Server/build

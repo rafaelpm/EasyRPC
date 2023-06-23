@@ -1,5 +1,5 @@
-#ifndef _BUILD_SERVER_FUNCTIONS_H
-#define _BUILD_SERVER_FUNCTIONS_H
+#ifndef _BUILD_CLIENT_FUNCTIONS_H
+#define _BUILD_CLIENT_FUNCTIONS_H
 /* ---------------------------------------------------------------------------*/
 #include <string.h>
 #include "SaveContent.h"
@@ -59,7 +59,7 @@ string BuildClientFunctions::buildToContent(ParserFunctions* parserFunctions) {
 	contentFile += spaceLine();
 	contentFile += "#endif";
 
-	printf("%s", contentFile.c_str());
+	//printf("%s", contentFile.c_str());
 
 	return contentFile;
 }
@@ -147,6 +147,10 @@ string BuildClientFunctions::buildHeaders() {
 	string content = addCodeWithSpace("#ifndef _EASY_RPC_REMOTE_CLIENT\n");
 	content += addCodeWithSpace("#define _EASY_RPC_REMOTE_CLIENT\n");
 	content += spaceLine();
+	content += addCodeWithSpace("#include \"client/easy_rpc_client.h\"\n");
+	content += addCodeWithSpace("#include \"package_builders/build_package_to_client.h\"\n");
+	content += addCodeWithSpace("#include \"package_builders/build_package_from_client_or_server.h\"\n");
+	//content += spaceLine();
 			
 	return content;
 }

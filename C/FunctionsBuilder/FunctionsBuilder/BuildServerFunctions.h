@@ -70,7 +70,7 @@ string BuildServerFunctions::buildToContent(ParserFunctions* parserFunctions) {
 
 	contentFile += "#endif";
 
-	printf("%s", contentFile.c_str());
+	//printf("%s", contentFile.c_str());
 
 	return contentFile;
 }

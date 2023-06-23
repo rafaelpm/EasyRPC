@@ -114,8 +114,8 @@ void ParserFunctions::InsertParams(string* params, FunctionInfo *functionInfo) {
 		param = paramsList.at(i);
 		spaceIndex = param.find(" ");
 		if (spaceIndex < 0) {
-			printf("Full Params: %s\n", *params);
-			printf("Param with problem: %s\n",param);
+			printf("Full Params: %s\n", param.c_str());
+			printf("Param with problem: %s\n", param.c_str());
 			perror("ParserFunctions->ParserContent->InsertParams: Space between var and type not found.");
 			continue;
 		}

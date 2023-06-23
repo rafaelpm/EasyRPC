@@ -17,6 +17,7 @@ int main() {
 	BuildClientFunctions* sut = new BuildClientFunctions();
 	content = sut->buildToContent(helperFunction);
 
+	//sut->saveFile("../../../../../EasyRPC/Tests/easy_rpc_remote_client.h");
 	sut->saveFile("../../../../../EasyRPC/Tests/easy_rpc_remote_client.h");
 	
 	return 0;

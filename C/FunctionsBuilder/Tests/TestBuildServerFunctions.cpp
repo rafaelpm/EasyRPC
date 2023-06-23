@@ -19,7 +19,8 @@ int main() {
 	BuildServerFunctions* sut = new BuildServerFunctions();
 	sut->buildToContent(helperFunction);
 
-	sut->saveFileOnPath("../../../../../EasyRPC/TestServer/");
+	//sut->saveFileOnPath("../../../../../EasyRPC/TestServer/");
+	sut->saveFileOnPath("/");
 
 	return 0;
 }
