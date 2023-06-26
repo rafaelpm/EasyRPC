@@ -10,7 +10,7 @@ typedef enum {
 	Integer,
 	Float,
 	Boolean,
-	String,
+	StringChar,
 	BinaryArray
 } TypeData;
 
@@ -38,7 +38,7 @@ string TypeDataParser::TypeToName(TypeData type, bool withPointer) {
 		return "float";
 	} else if (type == Boolean) {
 		return "bool";
-	} else if (type == String) {
+	} else if (type == StringChar) {
 		if (withPointer) {
 			return "char *";
 		} else {
@@ -61,7 +61,7 @@ string TypeDataParser::TypeToNameObject(TypeData type) {
 		return "Float";
 	} else if (type == Boolean) {
 		return "Boolean";
-	} else if (type == String) {
+	} else if (type == StringChar) {
 		return "String";
 	} else if (type == BinaryArray) {
 		return "BinaryArray";
@@ -76,7 +76,7 @@ string TypeDataParser::TypeToReturnNameGetFunction(TypeData type) {
 		return "getEasyRPC_Return_Float";
 	} else if (type == Boolean) {
 		return "getEasyRPC_Return_Boolean";
-	} else if (type == String) {
+	} else if (type == StringChar) {
 		return "getEasyRPC_Return_String";
 	} else if (type == BinaryArray) {
 		return "getEasyRPC_Return_Array";
@@ -91,7 +91,7 @@ string TypeDataParser::TypeToReturnNameSetFunction(TypeData type) {
 		return "setEasyRPC_Return_Float";
 	} else if (type == Boolean) {
 		return "setEasyRPC_Return_Boolean";
-	} else if (type == String) {
+	} else if (type == StringChar) {
 		return "setEasyRPC_Return_String";
 	} else if (type == BinaryArray) {
 		return "setEasyRPC_Return_Array";
@@ -106,7 +106,7 @@ string TypeDataParser::TypeToNameGetFunction(TypeData type) {
 		return "getEasyRPC_Param_Float";
 	} else if (type == Boolean) {
 		return "getEasyRPC_Param_Boolean";
-	} else if (type == String) {
+	} else if (type == StringChar) {
 		return "getEasyRPC_Param_String";
 	} else if (type == BinaryArray) {
 		return "getEasyRPC_Param_Array";
@@ -122,7 +122,7 @@ string TypeDataParser::TypeToNameSetFunction(TypeData type) {
 		return "setEasyRPC_Param_Float";
 	} else if (type == Boolean) {
 		return "setEasyRPC_Param_Boolean";
-	} else if (type == String) {
+	} else if (type == StringChar) {
 		return "setEasyRPC_Param_String";
 	} else if (type == BinaryArray) {
 		return "setEasyRPC_Param_Array";
@@ -139,7 +139,7 @@ TypeData TypeDataParser::NameToType(string* name) {
 	} else if (strcmp(name->c_str(), "bool") == 0) {
 		return Boolean;
 	} else if (strcmp(name->c_str(), "char*") == 0) {
-		return String;
+		return StringChar;
 	} else if (strcmp(name->c_str(), "uint8_t*") == 0 ||
 		strcmp(name->c_str(), "byte*") == 0) {
 		return BinaryArray;

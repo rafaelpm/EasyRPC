@@ -6,7 +6,7 @@ typedef enum {
     Integer,
     Float,
     Boolean,
-    String,
+    StringRPC,
     BinaryArray
 } TypeData;
 /* ---------------------------------------------------------------------------*/

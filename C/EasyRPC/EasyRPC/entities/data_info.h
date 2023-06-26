@@ -14,7 +14,7 @@ typedef struct {
 
 /* ---------------------------------------------------------------------------*/
 void setEasyRPC_DataInfo_String(char *value, DataInfo* returnDataInfo) {
-	returnDataInfo->type = String;
+	returnDataInfo->type = StringRPC;
 	snprintf(returnDataInfo->value, EASY_RPC_DATA_INFO_VALUE_SIZE, "%s", value);
 	returnDataInfo->valueSize = strlen(returnDataInfo->value);
 }

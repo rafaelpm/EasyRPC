@@ -45,7 +45,7 @@ void setEasyRPC_Return_String(EasyRPCPackage* package, char* value) {
 }
 /* ---------------------------------------------------------------------------*/
 bool getEasyRPC_Return_String(EasyRPCPackage* package, char* value) {	
-	if (package->returnInfo.type != String) {
+	if (package->returnInfo.type != StringRPC) {
 		return false;
 	}
 	memcpy(value, &package->returnInfo.value[0], package->returnInfo.valueSize);

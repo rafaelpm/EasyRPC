@@ -8,8 +8,11 @@ int main() {
 
 	string content = "\nint sum(int a,int b);\n";
 	content += "float subtract(float a, float b);\n";
-	content += "void print(char *message);\n";
+	content += "void print(char *message);\n";	
 	content += "void binaryData(byte *data);\n";
+	//Extra
+	content += "string get_name();\n";
+	content += "set_name(string name);\n";
 
 	//content = "void binaryData(byte *data);\n";
 
