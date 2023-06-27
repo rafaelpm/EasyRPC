@@ -4,7 +4,9 @@
 #include "type_data.h"
 #include <stdlib.h>
 
-#define EASY_RPC_DATA_INFO_VALUE_SIZE 50
+#ifndef EASY_RPC_DATA_INFO_VALUE_SIZE
+	#define EASY_RPC_DATA_INFO_VALUE_SIZE 255
+#endif
 
 typedef struct {
 	char value[EASY_RPC_DATA_INFO_VALUE_SIZE];

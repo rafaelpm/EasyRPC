@@ -3,11 +3,11 @@
 /* ---------------------------------------------------------------------------*/
 typedef enum {
     Void = 0,
-    Integer,
-    Float,
-    Boolean,
-    StringRPC,
-    BinaryArray
+    Integer = 1,
+    Float = 2,
+    Boolean = 3,
+    StringRPC = 4,
+    BinaryArray = 5
 } TypeData;
 /* ---------------------------------------------------------------------------*/
 #endif

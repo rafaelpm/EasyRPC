@@ -27,12 +27,17 @@ void easyRPC_ClientConnection_DisconnectLinuxTCP() {
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ClientConnection_ConnectLinuxTCP(){
     if(connect(clientSocket, (struct sockaddr *)&servAddr, sizeof(servAddr)) < 0){
-        isConnected = false;
-        printf("Fail when try connect to a server!\n");
-        return false;
+        if(clientSocket != INVALID_SOCKET){
+            close(clientSocket);
+        }
+
+        if(connect(clientSocket, (struct sockaddr *)&servAddr, sizeof(servAddr)) < 0){
+            isConnected = false;
+            printf("Fail when try connect to a server!\n");
+            return false;
+        }
     }
-    isConnected = true;
-    //printf("easyRPC_ClientConnection_ConnectLinuxTCP = OK\n");
+    isConnected = true;    
     return true;
 }
 /* ---------------------------------------------------------------------------*/

@@ -46,7 +46,9 @@ void test_set_get_string_array(char* nameFunction, char *valueParam1, uint8_t *v
         set_red("test_set_get_string_array->getEasyRPC_Param_Float->Compare1->Error");
     }
 
-    if (!getEasyRPC_Param_Array(&packageFromClient, &valueCompare2[0], 1)) {
+    uint16_t lenArray = 0;
+
+    if (!getEasyRPC_Param_Array(&packageFromClient, &valueCompare2[0], &lenArray, 1)) {
         set_red("test_set_get_string_array->getEasyRPC_Param_Float->Error");
     } else if (memcmp(&valueCompare2[0], valueParam2, sizeParam2) == 0) {
         set_red("test_set_get_string_array->getEasyRPC_Param_Float->Compare2->Error");

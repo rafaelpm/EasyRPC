@@ -12,8 +12,65 @@ uint8_t bufferReceiveMock[1024];
 int totalReceiveMock = 0;
 
 void easyRPC_ClientConnection_Mock_Setup();
+void test_wrap_unwrap_sum();
+void test_wrap_unwrap_text();
 /* ---------------------------------------------------------------------------*/
 void test_wrap_unwrap() {
+    //test_wrap_unwrap_sum();
+    test_wrap_unwrap_text();
+}
+/* ---------------------------------------------------------------------------*/
+void test_wrap_unwrap_text() {
+    char* url = (char *)"http://www.google.com.br";
+    easyRPC_ClientConnection_Mock_Setup();
+    easyRPC_ProcessData = easyRPC_ProcessDataFromClient;
+
+    //easyRPC_ClientWindowsTCP_Setup((char*)"127.0.0.1", (char*)"2000");
+
+    resetEasyRPC_Package(&easyRPC_clientPackage);
+    setEasyRPC_NameFunction(&easyRPC_clientPackage, (char*)"connect");
+    easyRPC_clientPackage.returnInfo.type = Boolean;
+
+    setEasyRPC_Param_String(&easyRPC_clientPackage, url);
+    
+    Stream streamData, streamToServer;
+    easyRPC_toBytesToServer(&easyRPC_clientPackage, &streamData);    
+    wrapData(&streamToServer, &streamData.buffer[0], streamData.size);
+
+    if (!easyRPC_ClientConnection_IsConnected()) {
+        if (!easyRPC_ClientConnection_Connect()) {
+            return;
+        }
+    }
+    easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size);
+
+    streamToServer.index = 0;
+
+    EasyRPCPackage packageUnwrap;
+
+    UnwrapStates res = unwrapData(&streamToServer, &packageUnwrap);
+    if (res != Unwrap_Complete) {
+        set_red("unwrapDataText->Error");
+    }
+    if (strcmp((const char *)&packageUnwrap.functionName, (char *)"connect") != 0) {
+        set_red("unwrapDataText->FunctionName->Error");
+    }
+    if (packageUnwrap.totalParams < 1) {
+        set_red("unwrapDataText->TotalParams->Error");
+    }
+    char urlTemp[50];
+    memset(urlTemp, 0, 50);
+    if (!getEasyRPC_Param_String(&packageUnwrap, (char *) & urlTemp, 0)) {
+        set_red("unwrapDataText->getEasyRPC_Param_String->Error");
+    }
+    if (strcmp((const char*)&urlTemp, (char*)url) != 0) {
+        set_red("unwrapDataText->Param->Error");
+    }
+
+    set_green("unwrapDataText->OK");
+}
+/* ---------------------------------------------------------------------------*/
+void test_wrap_unwrap_sum() {
     easyRPC_ClientConnection_Mock_Setup();
     easyRPC_ProcessData = easyRPC_ProcessDataFromClient;
 
@@ -27,7 +84,7 @@ void test_wrap_unwrap() {
     setEasyRPC_Param_Integer(&easyRPC_clientPackage, 3);
 
     Stream streamData, streamToServer;
-    easyRPC_toBytesToServer(&easyRPC_clientPackage, &streamData);    
+    easyRPC_toBytesToServer(&easyRPC_clientPackage, &streamData);
     wrapData(&streamToServer, &streamData.buffer[0], streamData.size);
 
     if (!easyRPC_ClientConnection_IsConnected()) {

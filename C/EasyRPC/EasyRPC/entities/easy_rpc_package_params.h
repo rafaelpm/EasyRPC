@@ -64,13 +64,13 @@ void setEasyRPC_Param_String(EasyRPCPackage* package, char* value) {
 	setEasyRPC_Param(package, &easyPackageParamTemp);
 }
 /* ---------------------------------------------------------------------------*/
-bool getEasyRPC_Param_String(EasyRPCPackage* package, char* value, int position) {
-	if (position >= package->totalParams) {
+bool getEasyRPC_Param_String(EasyRPCPackage* package, char* value, int position) {	
+	if (position >= package->totalParams) {		
 		return false;
 	}
-	if (package->params[position].type != StringRPC) {
+	if (package->params[position].type != StringRPC) {		
 		return false;
-	}
+	}	
 	memcpy(value, &package->params[position].value[0], package->params[position].valueSize);
 	return true;
 }

@@ -87,6 +87,7 @@ public class EasyRPCClientTCP extends EasyRPCClientConnection {
     public boolean send(byte[] data) {
         try {
             //System.out.println("=> "+data.length);
+            //printHex("send\n=>",data);
             dos.write(data);
             dos.flush();
             return true;

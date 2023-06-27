@@ -17,6 +17,16 @@ public class EasyRPCBaseCall {
     public EasyRPCPackage easyRPCPackageSend;
     public EasyRPCPackage easyRPCPackageReceived;
     public EasyRPCClientConnection connection;
+    /**
+     * Delay before read in milliseconds
+     */
+    public int delayBeforeRead = 0;
+    /**
+     * Delay between each read (milliseconds)
+     */
+    private int delayBetweenRead = 100;
+    
+    private int maxEmptyBufferTest = 3;
     
     public EasyRPCBaseCall(){
         easyRPCPackageSend = new EasyRPCPackage();
@@ -47,10 +57,15 @@ public class EasyRPCBaseCall {
         if(!connection.send(builderToServer.toBytes(easyRPCPackageSend))){
             return false;
         }
+        
+        if(delayBeforeRead > 0){
+            delay_ms(delayBeforeRead);
+        }
                         
         BuildPackageFromServer builderFromServer = new BuildPackageFromServer();
+        builderFromServer.setMaxEmptyBufferTest(maxEmptyBufferTest);
         while(builderFromServer.statePackage != StatePackage.Complete){
-            delay_ms(100);
+            delay_ms(delayBetweenRead);
             builderFromServer.setData(connection.receive());
             if(builderFromServer.statePackage == StatePackage.Error){                
                 finishSend();
@@ -73,6 +88,29 @@ public class EasyRPCBaseCall {
         try{
             Thread.sleep(time);
         }catch(Exception e){}
+    }
+    
+    
+    
+    public EasyRPCBaseCall setMaxEmptyBufferTest(int max){
+        if(max < 1){
+            return this;
+        }
+        maxEmptyBufferTest = max;
+        return this;
+    }
+    
+    public EasyRPCBaseCall setDelayBeforeRead(int delay){
+        delayBeforeRead = delay;
+        return this;
+    }
+    
+    public EasyRPCBaseCall setDelayBetweenRead(int delay){
+        if(delay <= 0){
+            return this;
+        }
+        delayBetweenRead = delay;
+        return this;
     }
     
     public EasyRPCBaseCall setFunctionName(String name){

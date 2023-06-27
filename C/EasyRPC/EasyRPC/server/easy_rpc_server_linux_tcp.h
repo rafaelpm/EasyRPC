@@ -15,12 +15,11 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <list>
-
-
+/* ---------------------------------------------------------------------------*/
 #include "easy_rpc_server.h"
 #include "../package_builders/build_package_from_client_or_server.h"
 #include "../package_builders/build_package_to_client.h"
-
+/* ---------------------------------------------------------------------------*/
 using namespace std;
 
 #define TIMEOUT_DISCONNECT_CLIENT 1000
@@ -174,37 +173,39 @@ bool easyRPC_ServerLinuxTCP_Send(uint8_t* data, uint16_t dataLen) {
 	if(!easyRPC_ServerLinuxTCP_IsConnected()){
 		return false;
 	}
-
 	//MSG_NOSIGNAL = ignore error
-	if(send(linuxServerTCP_ClientSocket, data, dataLen, MSG_NOSIGNAL) < 0){
-		printf("easyRPC_ServerLinuxTCP_Send = ERROR\n");
+	if(send(linuxServerTCP_ClientSocket, data, dataLen, MSG_NOSIGNAL) < 0){		
 		isLinuxServerTCP_Connected = false;
 		isLinuxServerTCP_ClientConnected = false;
 		close(linuxServerTCP_ClientSocket);
 		return false;
-	}
-	
-	printf("easyRPC_ServerLinuxTCP_Send = OK\n");
+	}	
 	return true;
 }
 /* ---------------------------------------------------------------------------*/
 
-bool easyRPC_ServerLinuxTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t timeout) {
+bool easyRPC_ServerLinuxTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t timeout) {	
 	*bytesRead = 0;
 
-	/*if(!easyRPC_ServerLinuxTCP_IsConnected()){
-		return false;
-	}*/
+	bool resetTimeout = false;
 
 	struct timeval tv;
 	//tv.tv_sec = timeout / 1000;
-	tv.tv_usec = timeout;
-	setsockopt(linuxServerTCP_ClientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+	memset(&tv,0,sizeof(timeval));	
+	tv.tv_usec = timeout * 1000;
+	//setsockopt(linuxServerTCP_ClientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
 
 	int count = 0;
 
 	do {
-		linuxServerTCP_res = recv(linuxServerTCP_ClientSocket, (char*)data, 512, 0 );
+		linuxServerTCP_res = recv(linuxServerTCP_ClientSocket, (char*)data, 512, 0);
+		//printf("Read %d bytes\n",linuxServerTCP_res);
+		if(linuxServerTCP_res == 0){
+			isLinuxServerTCP_Connected = false;
+			isLinuxServerTCP_ClientConnected = false;
+			close(linuxServerTCP_ClientSocket);
+			return false;
+		}
 		if (linuxServerTCP_res < 0) {
 			if (*bytesRead == 0) {	
 				sleep(0.01);
@@ -213,7 +214,7 @@ bool easyRPC_ServerLinuxTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t
 					countErrorsRecv++;
 					if(countErrorsRecv >= 2){
 						countErrorsRecv = 0;
-						printf("Timeout recv");
+						//printf("Timeout recv");
 						isLinuxServerTCP_Connected = false;
 						isLinuxServerTCP_ClientConnected = false;
 						close(linuxServerTCP_ClientSocket);
@@ -227,10 +228,20 @@ bool easyRPC_ServerLinuxTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t
 			}
 		} else {
 			countErrorsRecv = 0;
+			if(!resetTimeout){
+				resetTimeout = true;
+				//printf("Reset timeout\n");
+				tv.tv_usec = 1000;
+				setsockopt(linuxServerTCP_ClientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+			}
 		}
 		*bytesRead += linuxServerTCP_res;
 		
 	} while (true);
+
+	tv.tv_sec = 5;
+	setsockopt(linuxServerTCP_ClientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+
 	return true;
 }
 /* ---------------------------------------------------------------------------*/

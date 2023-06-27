@@ -27,6 +27,7 @@ public class EasyRPCPackageBase {
     
     protected byte[] getBinary(DataInputStream dis) throws IOException{
         int size = dis.readShort();
+        size &= 0xFFFF;
         byte[] buffer = new byte[size];
         dis.read(buffer);
         return buffer;
@@ -38,7 +39,8 @@ public class EasyRPCPackageBase {
     }
     
     protected String getString(DataInputStream dis) throws IOException{
-        int sizeName = dis.readByte();        
+        int sizeName = dis.readByte();
+        sizeName &= 0xFF;
         byte[] bufferName = new byte[sizeName];
         dis.read(bufferName);
         return (new String(bufferName)).trim();
@@ -84,11 +86,16 @@ public class EasyRPCPackageBase {
     
     public StatePackage statePackage = StatePackage.None;
     private int countEndData = 0;
+    private int maxEmptyBufferTest = 3;
+    
+    public void setMaxEmptyBufferTest(int max){
+        maxEmptyBufferTest = max;
+    }
     
     public boolean setData(DataInputStream dis) throws Exception {
         if(dis.available() <= headerSize){ 
             countEndData++;
-            if(countEndData >= 3){
+            if(countEndData >= maxEmptyBufferTest){
                 countEndData = 0;
                 statePackage = StatePackage.Error;
             }else{

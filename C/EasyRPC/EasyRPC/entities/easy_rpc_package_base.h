@@ -130,14 +130,13 @@ bool getEasyRPC_StringLen(Stream* stream, uint8_t* contentReturn, uint16_t* cont
 	uint8_t len = 0;
 	if (!readByte(stream, &len)) {
 		return false;
-	}
+	}	
 	if (!readArray(stream, contentReturn, len)) {
 		return false;
 	}
 	contentReturn[len] = 0;
 	if (contentLen != NULL) {
-		*contentLen = len;
-		
+		*contentLen = len;		
 	}
 	return true;
 }

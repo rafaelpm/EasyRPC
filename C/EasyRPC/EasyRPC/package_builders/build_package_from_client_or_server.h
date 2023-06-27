@@ -16,8 +16,9 @@ bool easyRPC_ProcessDataFromClient(Stream* stream, EasyRPCPackage* packageReturn
 	while (!isReadEOS_Plus(stream, 1)) {
 		if (!readByte(stream, (uint8_t *) &packageReturn->params[p].type)) {
 			return false;
-		}
+		}		
 		memset(&packageReturn->params[p].value[0], 0, EASY_RPC_DATA_INFO_VALUE_SIZE);
+		
 		if (packageReturn->params[p].type == BinaryArray) {
 			if (!getEasyRPC_BinaryArray(stream, (uint8_t*)&packageReturn->params[p].value[0], &packageReturn->params[p].valueSize)) {
 				return false;
@@ -26,7 +27,7 @@ bool easyRPC_ProcessDataFromClient(Stream* stream, EasyRPCPackage* packageReturn
 			if (!getEasyRPC_StringLen(stream, (uint8_t *) &packageReturn->params[p].value[0], &packageReturn->params[p].valueSize)) {
 				return false;
 			}
-		}
+		}		
 		p++;
 	}
 	packageReturn->totalParams = p;
