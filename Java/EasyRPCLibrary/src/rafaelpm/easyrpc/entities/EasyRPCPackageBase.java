@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import rafaelpm.easyrpc.packages_build.StatePackage;
 
 /**
@@ -23,6 +24,8 @@ public class EasyRPCPackageBase {
     protected final int maxPositions = 6;
     protected final int headerSize = 8;
     
+    protected byte[] bufferData;
+    
     private ByteArrayOutputStream cache;
     
     protected byte[] getBinary(DataInputStream dis) throws IOException{
@@ -36,6 +39,12 @@ public class EasyRPCPackageBase {
     protected void setBinary(byte[] buffer, DataOutputStream dos) throws IOException{
         dos.writeShort(buffer.length);
         dos.write(buffer);
+    }
+    
+    protected String getBool(DataInputStream dis) throws IOException{
+        byte size = dis.readByte();
+        byte data = dis.readByte();
+        return data == 't' ? "t":"f";
     }
     
     protected String getString(DataInputStream dis) throws IOException{
@@ -175,6 +184,10 @@ public class EasyRPCPackageBase {
                         if(dis.available() < size){
                             break;
                         }
+                        
+                        /*bufferData = new byte[dis.available()];
+                        dis.read(bufferData);                        
+                        dis = new DataInputStream(new ByteArrayInputStream(bufferData));*/
                                                 
                         if(!processData(dis)){
                             return false;
@@ -218,5 +231,16 @@ public class EasyRPCPackageBase {
         dis = new DataInputStream(new ByteArrayInputStream(cache.toByteArray()));
         cache = null;
         return dis;
+    }
+        
+    public void printHex(String title, byte[] data){
+        String out = "";
+        for(int i=0; i < data.length; i++){
+            if(i > 0){
+                out += ",";
+            }
+            out += "0x"+String.format("%02X", data[i]);
+        }
+        System.out.println(title+out);
     }
 }

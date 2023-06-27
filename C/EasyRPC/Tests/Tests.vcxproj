@@ -139,6 +139,7 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="test_all.h" />
     <ClInclude Include="test_builded_client_function.h" />
+    <ClInclude Include="test_builded_server_function.h" />
     <ClInclude Include="test_wrap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

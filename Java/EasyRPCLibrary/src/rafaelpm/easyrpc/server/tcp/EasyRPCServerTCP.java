@@ -29,7 +29,8 @@ public class EasyRPCServerTCP extends EasyRPCServerConnection implements Runnabl
     }
     
     public EasyRPCServerTCP setPort(int port) throws IOException {
-        socket = new ServerSocket(port);        
+        socket = new ServerSocket(port);
+        socket.setReceiveBufferSize(65000);
         if(easyRPCServerMatriz == null){
             easyRPCServerMatriz = new EasyRPCServerParser();
         }        
