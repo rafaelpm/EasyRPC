@@ -6,6 +6,9 @@
 using namespace std;
 class BuildClientFunctions {
 protected:
+	string buildBeforeSend();
+	string buildAfterSend();
+
 	string buildHeaders();
 	string buildTitleFunction(FunctionInfo* function);
 	string buildParamsFunction(FunctionInfo* function);
@@ -46,10 +49,15 @@ public:
 };
 
 /* ---------------------------------------------------------------------------*/
-string BuildClientFunctions::buildToContent(ParserFunctions* parserFunctions) {
-	contentFile = buildHeaders();
-
+string BuildClientFunctions::buildToContent(ParserFunctions* parserFunctions) {	
 	FunctionInfo* function;
+
+	contentFile = buildHeaders();
+	contentFile += spaceLine();
+	contentFile += buildBeforeSend();
+	contentFile += spaceLine();
+	contentFile += buildAfterSend();
+	
 	
 	for (int f = 0; f < parserFunctions->functions.size(); f++) {
 		function = parserFunctions->functions.at(f);
@@ -64,13 +72,38 @@ string BuildClientFunctions::buildToContent(ParserFunctions* parserFunctions) {
 	return contentFile;
 }
 /* ---------------------------------------------------------------------------*/
+string BuildClientFunctions::buildBeforeSend() {
+	string content = "";
+	buildBeginSpace(0, 0);
+	content += addCodeWithSpace("void easyRPC_Client_BeforeSend(){\n");
+	buildBeginSpace(1, 0);
+	content += addCodeWithSpace("easyRPC_ProcessData = easyRPC_ProcessDataFromServer;\n");
+	content += addCodeWithSpace("//PUT YOUR CODE HERE\n");
+	buildBeginSpace(0, 0);
+	content += addCodeWithSpace("}\n");	
+	return content;
+}
+/* ---------------------------------------------------------------------------*/
+string BuildClientFunctions::buildAfterSend() {
+	string content = "";
+	buildBeginSpace(0, 0);
+	content += addCodeWithSpace("void easyRPC_Client_AfterSend(){\n");
+	buildBeginSpace(1, 0);
+	content += addCodeWithSpace("easyRPC_ProcessData = easyRPC_ProcessDataFromClient;\n");
+	content += addCodeWithSpace("//PUT YOUR CODE HERE\n");
+	buildBeginSpace(0, 0);
+	content += addCodeWithSpace("}\n");	
+	return content;	
+}
+/* ---------------------------------------------------------------------------*/
 string BuildClientFunctions::buildFunction(FunctionInfo* function) {
 	string content = "";
 	content += spaceLine();
 	content += buildTitleFunction(function);
 	buildBeginSpace(1, 0);
+	content += addCodeWithSpace("easyRPC_Client_BeforeSend();\n");
 	content += addCodeWithSpace("if (!easyRPC_ClientConnection_IsConnected()) {\n");
-	content += addCodeWithSpace("  if (!easyRPC_ClientConnection_Connect()) { return false; }\n");
+	content += addCodeWithSpace("  if (!easyRPC_ClientConnection_Connect()) { easyRPC_Client_AfterSend(); return false; }\n");
 	content += addCodeWithSpace("}\n\n");
 	content += addCodeWithSpace("//Build package\n");
 	content += addCodeWithSpace("resetEasyRPC_Package(&easyRPC_clientPackage);\n");
@@ -86,17 +119,18 @@ string BuildClientFunctions::buildFunction(FunctionInfo* function) {
 
 	content += "\n";
 	content += addCodeWithSpace("//Send and receive data\n");
-	content += addCodeWithSpace("if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) { return false; }\n");
-	content += addCodeWithSpace("if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { return false; }\n");
+	content += addCodeWithSpace("if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) { easyRPC_Client_AfterSend(); return false; }\n");
+	content += addCodeWithSpace("if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend(); return false; }\n");
 
 	if (function->returnInfo.type != Void) {
 		content += addCodeWithSpace("EasyRPCPackage packageFromServer;\n");
 		content += addCodeWithSpace("unwrapData(&streamFromServer, &packageFromServer);\n");
 
-		content += addCodeWithSpace("if(!" + typeDataParser.TypeToReturnNameGetFunction(function->returnInfo.type) + "(&packageFromServer, returnValue)) { return false; }\n");
+		content += addCodeWithSpace("if(!" + typeDataParser.TypeToReturnNameGetFunction(function->returnInfo.type) + "(&packageFromServer, returnValue)) { easyRPC_Client_AfterSend(); return false; }\n");
 	}
 
 	content += addCodeWithSpace("easyRPC_ClientConnection_Disconnect();\n");
+	content += addCodeWithSpace("easyRPC_Client_AfterSend();\n");
 
 	content += addCodeWithSpace("return true;\n");
 	buildBeginSpace(0, 0);

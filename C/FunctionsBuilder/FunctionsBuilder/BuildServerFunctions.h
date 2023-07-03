@@ -17,7 +17,7 @@ class BuildServerFunctions {
 	string buildFunctionToRunFunctionApp(FunctionInfo* function);
 	string buildRunFunctionApp(ParserFunctions* parserFunctions);
 
-	string buildHeaders();
+	string buildHeaders(ParserFunctions* parserFunctions);
 	string spaceLine() { return "/* ---------------------------------------------------------------------------*/\n"; };
 
 	TypeDataParser typeDataParser;
@@ -54,7 +54,7 @@ public:
 };
 /* ---------------------------------------------------------------------------*/
 string BuildServerFunctions::buildToContent(ParserFunctions* parserFunctions) {
-	contentFile = buildHeaders();
+	contentFile = buildHeaders(parserFunctions);
 
 	contentFile += buildHeaderFunctions(parserFunctions);
 	contentFile += spaceLine();
@@ -131,7 +131,7 @@ string BuildServerFunctions::buildFunctionToRunFunctionApp(FunctionInfo* functio
 			sprintf(bufferTemp, "param%d_len", i);
 			content += bufferTemp;
 						
-		}else if (param->type == String) {
+		}else if (param->type == StringChar) {
 			content += "[EASY_RPC_DATA_INFO_VALUE_SIZE];\n";
 			content += addCodeWithSpace("memset(");
 			sprintf(bufferTemp, "&param%d[0]", i);
@@ -153,7 +153,7 @@ string BuildServerFunctions::buildFunctionToRunFunctionApp(FunctionInfo* functio
 			content += bufferTemp;
 			content += "_len";
 
-		}else if (param->type == String) {
+		}else if (param->type == StringChar) {
 			content += "[0]";
 		}
 		content += ",";
@@ -245,10 +245,17 @@ string BuildServerFunctions::buildAddFunctionsInList(ParserFunctions* parserFunc
 	return content;
 }
 /* ---------------------------------------------------------------------------*/
-string BuildServerFunctions::buildHeaders() {
+string BuildServerFunctions::buildHeaders(ParserFunctions* parserFunctions) {
 	buildBeginSpace(0, 0);
 	string content = addCodeWithSpace("#ifndef _EASY_RPC_SERVER_BIND_H\n");
 	content += addCodeWithSpace("#define _EASY_RPC_SERVER_BIND_H\n");
+	content += spaceLine();
+	sprintf(bufferTemp,"#define EASY_RPC_MAX_FUNCTIONS %ld\n",parserFunctions->functions.size()+1);
+	content += addCodeWithSpace(bufferTemp);
+	content += addCodeWithSpace("//If necessary adjust size, default is 255\n");
+	content += addCodeWithSpace("//#define EASY_RPC_DATA_INFO_VALUE_SIZE 255\n");
+	content += addCodeWithSpace("//#define _CALCULE_TIME\n");
+	content += addCodeWithSpace("//#define DEBUG\n");
 	content += spaceLine();
 	content += addCodeWithSpace("#include \"server/easy_rpc_bind.h\"\n");
 	content += spaceLine();

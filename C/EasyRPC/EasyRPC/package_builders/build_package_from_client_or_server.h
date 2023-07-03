@@ -8,6 +8,9 @@ bool easyRPC_ProcessDataFromClient(Stream* stream, EasyRPCPackage* packageReturn
 	if (!getEasyRPC_String(stream, &packageReturn->functionName[0])) {
 		return false;
 	}
+	#ifdef DEBUG
+	printf("FunctionName: %s\n",packageReturn->functionName);
+	#endif
 	if (!readByte(stream, (uint8_t*)&packageReturn->returnInfo.type)) {
 		return false;
 	}
@@ -31,6 +34,9 @@ bool easyRPC_ProcessDataFromClient(Stream* stream, EasyRPCPackage* packageReturn
 		p++;
 	}
 	packageReturn->totalParams = p;
+	#ifdef DEBUG
+	printf("TotalParams: %d\n",p);
+	#endif
 
 	return true;
 }

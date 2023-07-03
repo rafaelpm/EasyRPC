@@ -199,7 +199,7 @@ bool easyRPC_ServerLinuxTCP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t
 
 	do {
 		linuxServerTCP_res = recv(linuxServerTCP_ClientSocket, (char*)data, 512, 0);
-		//printf("Read %d bytes\n",linuxServerTCP_res);
+		printf("Read %d bytes\n",linuxServerTCP_res);
 		if(linuxServerTCP_res == 0){
 			isLinuxServerTCP_Connected = false;
 			isLinuxServerTCP_ClientConnected = false;
