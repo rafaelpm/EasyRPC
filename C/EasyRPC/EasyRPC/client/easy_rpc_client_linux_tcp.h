@@ -8,6 +8,9 @@
 #include <arpa/inet.h>
 
 #define INVALID_SOCKET 0
+
+#define DEBUG_LINUX_TCP
+
 /* ---------------------------------------------------------------------------*/
 int clientSocket = INVALID_SOCKET;
 bool isConnected = false;
@@ -36,13 +39,21 @@ bool easyRPC_ClientConnection_ConnectLinuxTCP(){
             printf("Fail when try connect to a server!\n");
             return false;
         }
+    }    
+    #ifdef DEBUG_LINUX_TCP
+    else{
+        char *s = inet_ntoa(servAddr.sin_addr);
+        printf("Connected at: %s\n",s);
     }
+    #endif
     isConnected = true;    
     return true;
 }
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ClientConnection_SendLinuxTCP(uint8_t* data, uint16_t dataLen) {
-    //printf("easyRPC_ClientConnection_SendLinuxTCP: %d\n", dataLen);
+    #ifdef DEBUG_LINUX_TCP
+        printf("easyRPC_ClientConnection_SendLinuxTCP: %d\n", dataLen);
+    #endif
     if(send(clientSocket,data, dataLen, 0) < 0){
         return false;
     }
