@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <fcntl.h> 
 
 #define INVALID_SOCKET 0
 
@@ -15,6 +16,9 @@
 int clientSocket = INVALID_SOCKET;
 bool isConnected = false;
 struct sockaddr_in servAddr;
+fd_set read_fds;
+/* ---------------------------------------------------------------------------*/
+bool easyRPC_ClientConnection_SetTimeout(int seconds, int ms);
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ClientConnection_IsConnectedLinuxTCP() {
     return isConnected;
@@ -46,8 +50,37 @@ bool easyRPC_ClientConnection_ConnectLinuxTCP(){
         printf("Connected at: %s\n",s);
     }
     #endif
+
+    //Configure to unlock socket mode
+    int flags = fcntl(clientSocket, F_GETFL, 0);
+    if (flags == -1) {
+        perror("Erro ao chamar fcntl");
+    } else {
+        flags |= O_NONBLOCK;
+        if (fcntl(clientSocket, F_SETFL, flags) == -1) {
+            perror("Erro ao chamar fcntl");
+        }
+    }
+
     isConnected = true;    
     return true;
+}
+/* ---------------------------------------------------------------------------*/
+bool easyRPC_ClientConnection_SetTimeout(int seconds, int ms){
+    
+    struct timeval timeout;
+    FD_ZERO(&read_fds);
+    FD_SET(clientSocket, &read_fds);
+
+    // Configurar o tempo limite para 10 segundos
+    timeout.tv_sec = seconds;
+    timeout.tv_usec = ms;
+    
+    if(select(clientSocket+1, &read_fds, NULL, NULL, &timeout) <= 0){
+        printf("Falha no Select\n");
+        return false;
+    }
+    return FD_ISSET(clientSocket, &read_fds);
 }
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ClientConnection_SendLinuxTCP(uint8_t* data, uint16_t dataLen) {
@@ -64,10 +97,13 @@ bool easyRPC_ClientConnection_ReceiveLinuxTCP(uint8_t* data, uint16_t *bytesRead
     int unitRead = 0;
     int maxTime = timeout / 10;
     int countTime = 0;
-
+    
+    easyRPC_ClientConnection_SetTimeout(10,0);
+    
     *bytesRead = 0;
     do{
-        unitRead = read(clientSocket, data, SIZE_BUFFER_STREAM);
+        unitRead = read(clientSocket, data, SIZE_BUFFER_STREAM);        
+        //unitRead = recv(clientSocket, data, SIZE_BUFFER_STREAM, 0);        
         if(unitRead < 0){                        
             if(*bytesRead > 0){
                 break;
@@ -76,8 +112,9 @@ bool easyRPC_ClientConnection_ReceiveLinuxTCP(uint8_t* data, uint16_t *bytesRead
             if(countTime >= maxTime){
                 break;
             }
-        }else{
+        }else{            
             *bytesRead += unitRead;
+            countTime = maxTime-1;
         }
         usleep(10000);
     }while(unitRead > 0);
