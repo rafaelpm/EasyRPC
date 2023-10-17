@@ -1,7 +1,7 @@
 #ifndef _EASY_RPC_CLIENT_LINUX_H
 #define _EASY_RPC_CLIENT_LINUX_H
 /* ---------------------------------------------------------------------------*/
-#include "easy_rpc_client_connection.h"
+#include "client/easy_rpc_client_connection.h"
 #include "libstream.h"
 #include <stdio.h>
 #include <unistd.h>

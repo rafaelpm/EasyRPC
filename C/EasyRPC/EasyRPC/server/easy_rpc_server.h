@@ -4,7 +4,7 @@
 #include <string>
 #include "entities/easy_rpc_package.h"
 #include "entities/easy_rpc_package_base.h"
-#include "easy_rpc_bind.h"
+#include "server/easy_rpc_bind.h"
 #include "../package_builders/build_package_to_client.h"
 #include "libstream.h"
 

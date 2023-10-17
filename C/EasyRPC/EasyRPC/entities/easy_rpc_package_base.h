@@ -3,7 +3,7 @@
 /* ---------------------------------------------------------------------------*/
 //#define SIZE_BUFFER_STREAM 2048
 #include "libstream.h"
-#include "easy_rpc_package.h"
+#include "entities/easy_rpc_package.h"
 
 #define HEADER 0x55
 #define VERSION 1

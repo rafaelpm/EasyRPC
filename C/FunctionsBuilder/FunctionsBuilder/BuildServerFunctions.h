@@ -250,6 +250,9 @@ string BuildServerFunctions::buildHeaders(ParserFunctions* parserFunctions) {
 	string content = addCodeWithSpace("#ifndef _EASY_RPC_SERVER_BIND_H\n");
 	content += addCodeWithSpace("#define _EASY_RPC_SERVER_BIND_H\n");
 	content += spaceLine();
+	content += addCodeWithSpace("#ifdef EASY_RPC_MAX_FUNCTIONS\n");
+	content += addCodeWithSpace("#undef EASY_RPC_MAX_FUNCTIONS\n");
+	content += addCodeWithSpace("#endif\n");	
 	sprintf(bufferTemp,"#define EASY_RPC_MAX_FUNCTIONS %ld\n",parserFunctions->functions.size()+1);
 	content += addCodeWithSpace(bufferTemp);
 	content += addCodeWithSpace("//If necessary adjust size, default is 255\n");
