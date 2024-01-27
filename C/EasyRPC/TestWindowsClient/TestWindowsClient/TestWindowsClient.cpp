@@ -36,7 +36,21 @@ int main()
         set_red("easyRPC_ClientConnection_Send->Error");
     }
 
-    if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) {
+    if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 5000)) {
+        set_red("easyRPC_ClientConnection_Receive->Error");
+    }
+
+    unwrapData(&streamFromServer, &packageFromServer);
+    
+
+    if (!isACK_EasyRPC()) {
+        set_red("isACK_EasyRPC->Error");
+    }
+
+    resetStream(&streamToServer);
+    resetStream(&streamFromServer);
+
+    if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 10000)) {
         set_red("easyRPC_ClientConnection_Receive->Error");
     }
 

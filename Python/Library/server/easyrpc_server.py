@@ -14,20 +14,23 @@ class EasyRPCServer:
     def __init__(self, port) -> None:
         self.port = port
 
-    def process_data(self,conn, data):
+    def process_data(self, conn, data):
         #print("process_data: ",data)
-        answer = self.check_methods(data)        
+        answer = self.check_methods(conn, data)        
         if len(answer) == 0:
             return
         #print("Answer: ",answer)
         conn.sendall(bytes(answer))
 
-    def check_methods(self, data):        
+    def check_methods(self, conn, data):        
         pkt = EasyRPCPackageServer()
         pkt.params.clear()
         if pkt.set_data_from_client(data) == False:
             #print("check_methods: fail package")
             return []
+        
+        ack = EasyRPCPackageServer()
+        conn.sendall(bytes(ack.build_ack()))
         
         #print("method name: ",pkt.method_name)
         found = False

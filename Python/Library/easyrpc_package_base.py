@@ -63,8 +63,12 @@ class EasyRPCPackageBase:
                 if(self.streamIn.is_end_read_len(2)):
                     break
                 self.size = self.streamIn.readShort()
-                
                 self._mount_position += 1
+
+                if(self.size == 0):                    
+                    self._mount_position += 1
+                    break
+                
             elif(self._mount_position == 6):
                 #print("Pos 6: ",self.size, " / ",self.streamIn.index_read," x ",len(data))
                 if(self.streamIn.is_end_read_len(self.size)):
@@ -82,6 +86,10 @@ class EasyRPCPackageBase:
 
         #End while
 
+    # is Ack?
+    def isAck(self):
+        return (self.reserved & 0x01) == 0x01
+
     # to client
     def wrapData(self, data):
         #print("wrapData: ",data)
@@ -91,8 +99,11 @@ class EasyRPCPackageBase:
         out.writeByte(self.version)
         out.writeByte(self.sequence)
         out.writeShort(self.checksum)
-        out.writeByte(self.reserved)                
-        out.writeBinaryArray(data)
+        out.writeByte(self.reserved)
+        if(self.size > 0):
+            out.writeBinaryArray(data)
+        else:
+            out.writeShort(0)
         return out.data_write
 
         

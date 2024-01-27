@@ -35,6 +35,9 @@ class EasyRPCPackageClient(EasyRPCPackageBase):
         if self._mount_position <= self._max_positions:
             return False
         
+        if self.isAck() == True:
+            return True
+        
         self.method_name = self.streamData.readString()
 
         self.return_info = EasyRPCDataInfo()

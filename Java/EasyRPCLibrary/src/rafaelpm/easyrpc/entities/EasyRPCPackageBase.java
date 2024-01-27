@@ -27,7 +27,7 @@ public class EasyRPCPackageBase {
     protected byte[] bufferData;
     
     private ByteArrayOutputStream cache;
-    
+        
     protected byte[] getBinary(DataInputStream dis) throws IOException{
         int size = dis.readShort();
         size &= 0xFFFF;
@@ -81,7 +81,9 @@ public class EasyRPCPackageBase {
             dos.writeShort(checksum);
             dos.writeByte(reserved);
             dos.writeShort(data.length);
-            dos.write(data);
+            if(data.length > 0){
+                dos.write(data);
+            }
             
         }catch(Exception e){
             e.printStackTrace();
@@ -179,6 +181,11 @@ public class EasyRPCPackageBase {
                         size = dis.readShort();
                         size &= 0xFFFF;
                         mountPosition++;
+                        if(size == 0){
+                            statePackage = StatePackage.Complete;
+                            mountPosition++;
+                            return true;
+                        }
                         break;
                     case 6:
                         if(dis.available() < size){
@@ -204,6 +211,10 @@ public class EasyRPCPackageBase {
         }
                 
         return mountPosition >= maxPositions;
+    }
+    
+    public boolean isACK(){
+        return (reserved & 0x01) == 0x01;
     }
     
     protected boolean processData(DataInputStream dis) throws Exception {

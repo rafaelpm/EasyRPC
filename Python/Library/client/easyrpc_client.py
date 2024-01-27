@@ -30,6 +30,17 @@ class EasyRPCClient:
 
         del pkt_send
 
+        # Read ACK
+        data = self.sock.recv(1024)
+        #print("<= ",data)
+        pkt_read = EasyRPCPackageClient()
+        if pkt_read.set_data_from_server(data) == False:
+            return
+        
+        if pkt_read.isAck() == False:
+            return
+
+        # Read Answer
         data = self.sock.recv(1024)
         #print("<= ",data)
         pkt_read = EasyRPCPackageClient()

@@ -65,6 +65,7 @@ void setEasyRPC_Param_String(EasyRPCPackage* package, char* value) {
 }
 /* ---------------------------------------------------------------------------*/
 bool getEasyRPC_Param_String(EasyRPCPackage* package, char* value, int position) {	
+	memset(value, 0, sizeof(value));
 	if (position >= package->totalParams) {		
 		return false;
 	}
@@ -72,6 +73,7 @@ bool getEasyRPC_Param_String(EasyRPCPackage* package, char* value, int position)
 		return false;
 	}	
 	memcpy(value, &package->params[position].value[0], package->params[position].valueSize);
+//	package->params[position].value[package->params[position].valueSize] = 0;
 	return true;
 }
 /* ---------------------------------------------------------------------------*/

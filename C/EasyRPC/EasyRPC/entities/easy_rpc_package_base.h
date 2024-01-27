@@ -73,6 +73,10 @@ UnwrapStates unwrapData(Stream* streamIn, EasyRPCPackage* packageOut) {
 					return Unwrap_Incomplete;
 				}
 				unwrapPosition++;
+				if (sizePackage == 0) {
+					unwrapPosition = 0;
+					return Unwrap_Complete;
+				}
 				break;
 			case 6:
 				if (isReadEOS_Plus(streamIn, sizePackage)) {
@@ -91,15 +95,27 @@ UnwrapStates unwrapData(Stream* streamIn, EasyRPCPackage* packageOut) {
 	return Unwrap_Incomplete;
 }
 /* ---------------------------------------------------------------------------*/
+bool isACK_EasyRPC() {
+	return ((reserved & 0x01) == 0x01);
+}
+/* ---------------------------------------------------------------------------*/
 void wrapData(Stream* streamOut, byte *data, uint16_t data_len) {	
 	startToWrite(streamOut);
 	writeByte(streamOut, HEADER);
 	writeByte(streamOut, VERSION);
 	writeByte(streamOut, sequence);
 	writeShort(streamOut, checksum);
-	writeByte(streamOut, 0);//Reserved
+	writeByte(streamOut, reserved);//Reserved
 	writeShort_Inverted(streamOut, data_len);
-	writeArray(streamOut, (uint8_t *)data, data_len);
+	if (data_len > 0) {
+		writeArray(streamOut, (uint8_t*)data, data_len);
+	}
+}
+/* ---------------------------------------------------------------------------*/
+void wrapDataACK(Stream* streamOut) {
+	reserved = 0x01;
+	wrapData(streamOut, NULL, 0);
+	reserved = 0;
 }
 /* ---------------------------------------------------------------------------*/
 bool setEasyRPC_BinaryArray(Stream* stream, uint8_t* data, int len) {

@@ -58,12 +58,23 @@ public class EasyRPCBaseCall {
             return false;
         }
         
+        BuildPackageFromServer builderFromServerAck = new BuildPackageFromServer();
+        builderFromServerAck.setMaxEmptyBufferTest(maxEmptyBufferTest);
+        while(builderFromServerAck.statePackage != StatePackage.Complete){
+            delay_ms(delayBetweenRead);
+            builderFromServerAck.setData(connection.receive());
+            if(builderFromServerAck.statePackage == StatePackage.Error){                
+                finishSend();
+                return false;
+            }
+        }
+        
         if(delayBeforeRead > 0){
             delay_ms(delayBeforeRead);
         }
                         
         BuildPackageFromServer builderFromServer = new BuildPackageFromServer();
-        builderFromServer.setMaxEmptyBufferTest(maxEmptyBufferTest);
+        builderFromServer.setMaxEmptyBufferTest(maxEmptyBufferTest*3);
         while(builderFromServer.statePackage != StatePackage.Complete){
             delay_ms(delayBetweenRead);
             builderFromServer.setData(connection.receive());

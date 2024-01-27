@@ -53,8 +53,18 @@ bool processDataOnServer() {
 	}
 
 	#ifdef _CALCULE_TIME
-	end_time((char *)"Unwrap data");
-	start_time();
+		end_time((char*)"Unwrap data");
+		start_time();
+	#endif
+
+	resetStream(&streamOnServerToClient);
+	wrapDataACK(&streamOnServerToClient);
+	
+	easyRPC_Server_Send(&streamOnServerToClient.buffer[0], streamOnServerToClient.size);
+
+	#ifdef _CALCULE_TIME
+		end_time((char*)"Send ACK");
+		start_time();
 	#endif
 
 	resetStream(&streamOnServer);

@@ -13,6 +13,11 @@ import rafaelpm.easyrpc.entities.TypeData;
  */
 public class BuildPackageToClient extends EasyRPCPackageBase {
     
+    public byte[] getAck(){
+        reserved = 0x01;
+        return wrapData(new byte[0]);
+    }
+    
     
     public byte[] toBytes(EasyRPCPackage easyPackage){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

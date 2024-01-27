@@ -2,8 +2,6 @@ package rafaelpm.easyrpc.server;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import rafaelpm.easyrpc.entities.DataInfo;
-import rafaelpm.easyrpc.entities.EasyRPCError;
 import rafaelpm.easyrpc.entities.EasyRPCPackage;
 import rafaelpm.easyrpc.entities.TypeData;
 

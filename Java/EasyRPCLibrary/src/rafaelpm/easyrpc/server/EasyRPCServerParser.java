@@ -46,10 +46,15 @@ public class EasyRPCServerParser implements Runnable {
             }
         }
         
+        BuildPackageToClient buildPackageToClient = new BuildPackageToClient();        
+        channel.send(buildPackageToClient.getAck());   
+        
+        resetTimeout();
+        delay_ms(100);
+        
         for(EasyRPCBaseBindClass bindClass: classes){
             try {
-                if(bindClass.process(builderFromClient.easyPackage, bindClass)){
-                    //System.out.println("EasyRPCServer Process OK");
+                if(bindClass.process(builderFromClient.easyPackage, bindClass)){                    
                     break;
                 }
             } catch (Exception ex) {
@@ -61,7 +66,7 @@ public class EasyRPCServerParser implements Runnable {
         
         resetTimeout();
         
-        BuildPackageToClient buildPackageToClient = new BuildPackageToClient();
+        buildPackageToClient = new BuildPackageToClient();
         //System.out.println("EasyRPCServer Sending Answer");
         channel.send(buildPackageToClient.toBytes(builderFromClient.easyPackage));
         //channel.close();

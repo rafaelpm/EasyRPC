@@ -10,7 +10,7 @@ int sum(int a, int b) {
 }
 
 float subtract(float a, float b) {
-    printf("RUN -> subtract(%d, %d)\n", a, b);
+    printf("RUN -> subtract(%0.2f, %0.2f)\n", a, b);
     return a - b;
 }
 

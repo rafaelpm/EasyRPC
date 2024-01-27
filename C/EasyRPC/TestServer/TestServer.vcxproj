@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>C:\Users\pdi02\Documents\GitHub\EasyRPC\C\EasyRPC\EasyRPC;C:\Users\pdi02\Documents\GitHub\EmbeddedCleanArch\libstream\libstream;C:\Users\pdi02\Documents\GitHub\EmbeddedCleanArch\libdebug\libdebug;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>C:\Users\Rafael\Documents\GitHub\EasyRPC\C\EasyRPC\EasyRPC;C:\Users\Rafael\Documents\GitHub\EmbeddedCleanArch\libstream\libstream;C:\Users\Rafael\Documents\GitHub\EmbeddedCleanArch\libdebug\libdebug;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

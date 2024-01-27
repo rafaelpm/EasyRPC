@@ -25,7 +25,7 @@ void test_set_get_string_array(char* nameFunction, char *valueParam1, uint8_t *v
     setEasyRPC_Param_String(&packageToServer, valueParam1);
     setEasyRPC_Param_Array(&packageToServer, valueParam2, sizeParam2);
 
-    if (!easyRPC_toBytesToClient(&packageToServer, &streamToServer)) {
+    if (!easyRPC_toBytesToServer(&packageToServer, &streamToServer)) {
         set_red("test_set_get_string_array->easyRPC_toBytesToClient->Error");
     }
 
@@ -40,9 +40,10 @@ void test_set_get_string_array(char* nameFunction, char *valueParam1, uint8_t *v
     } else if (packageFromClient.totalParams != 2) {
         set_red("test_set_get_string_array->totalParams->Error");
     }
+
     if (!getEasyRPC_Param_String(&packageFromClient, &valueCompare1[0], 0)) {
         set_red("test_set_get_string_array->getEasyRPC_Param_Float->Error");
-    } else if (memcmp(&valueCompare1[0],valueParam1,strlen(valueParam1)) == 0){
+    } else if (memcmp(&valueCompare1[0],valueParam1,strlen(valueParam1)) != 0){
         set_red("test_set_get_string_array->getEasyRPC_Param_Float->Compare1->Error");
     }
 
@@ -50,7 +51,7 @@ void test_set_get_string_array(char* nameFunction, char *valueParam1, uint8_t *v
 
     if (!getEasyRPC_Param_Array(&packageFromClient, &valueCompare2[0], &lenArray, 1)) {
         set_red("test_set_get_string_array->getEasyRPC_Param_Float->Error");
-    } else if (memcmp(&valueCompare2[0], valueParam2, sizeParam2) == 0) {
+    } else if (memcmp(&valueCompare2[0], valueParam2, sizeParam2) != 0) {
         set_red("test_set_get_string_array->getEasyRPC_Param_Float->Compare2->Error");
     }
 
@@ -65,7 +66,7 @@ void test_set_get_bool(char* nameFunction, bool valueParam1, int valueParam2) {
     setEasyRPC_Param_Boolean(&packageToServer, valueParam1);
     setEasyRPC_Param_Integer(&packageToServer, valueParam2);
 
-    if (!easyRPC_toBytesToClient(&packageToServer, &streamToServer)) {
+    if (!easyRPC_toBytesToServer(&packageToServer, &streamToServer)) {
         set_red("test_set_get_bool->easyRPC_toBytesToClient->Error");
     }
 
@@ -103,7 +104,7 @@ void test_set_get_int(char* nameFunction, int valueParam1, float valueParam2) {
     setEasyRPC_Param_Integer(&packageToServer, valueParam1);
     setEasyRPC_Param_Float(&packageToServer, valueParam2);
 
-    if (!easyRPC_toBytesToClient(&packageToServer, &streamToServer)) {
+    if (!easyRPC_toBytesToServer(&packageToServer, &streamToServer)) {
         set_red("test_set_get_int->easyRPC_toBytesToClient->Error");
     }
 
@@ -140,7 +141,7 @@ void test_set_get_float(char* nameFunction, float valueParam1, float valueParam2
     setEasyRPC_Param_Float(&packageToServer, valueParam1);
     setEasyRPC_Param_Float(&packageToServer, valueParam2);
 
-    if (!easyRPC_toBytesToClient(&packageToServer, &streamToServer)) {
+    if (!easyRPC_toBytesToServer(&packageToServer, &streamToServer)) {
         set_red("test_set_get_float->easyRPC_toBytesToClient->Error");
     }
 

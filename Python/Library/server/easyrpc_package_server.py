@@ -11,6 +11,12 @@ class EasyRPCPackageServer(EasyRPCPackageBase):
     method_name = '';
     params = []
 
+    def build_ack(self):
+        self.reserved = 0x01
+        data = self.wrapData([])
+        self.reserved = 0
+        return data
+
     def set_data_from_client(self, data):
         self.method_name = ''
         self.set_data(data)
