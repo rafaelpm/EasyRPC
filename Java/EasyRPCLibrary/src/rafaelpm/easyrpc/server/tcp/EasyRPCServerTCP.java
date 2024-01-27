@@ -64,6 +64,7 @@ public class EasyRPCServerTCP extends EasyRPCServerConnection implements Runnabl
             } catch (IOException ex) {
                 Logger.getLogger(EasyRPCServerTCP.class.getName()).log(Level.SEVERE, null, ex);
             }
+            socket = null;
         }
     }
 
@@ -81,6 +82,9 @@ public class EasyRPCServerTCP extends EasyRPCServerConnection implements Runnabl
                           
             } catch (IOException ex) {
                 Logger.getLogger(EasyRPCServerTCP.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(socket == null){
+                break;
             }
         }
     }
