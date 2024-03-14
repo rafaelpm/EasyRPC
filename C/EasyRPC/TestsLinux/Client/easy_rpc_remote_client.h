@@ -25,8 +25,25 @@ bool remote_sum(int *returnValue, int a, int b){
 
 	//Send and receive data
 	if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) { return false; }
-	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { return false; }
+
+	//Check Ack
+	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { 
+		printf("1) Fail ACK!\n");
+		return false; 
+	}
+	printf("Check ACK!\n");		
+	
 	EasyRPCPackage packageFromServer;
+	unwrapData(&streamFromServer, &packageFromServer);
+	if(!isACK_EasyRPC()){ 
+		printf("2) Fail ACK!\n");
+		return false; 
+	}
+
+	resetStream(&streamFromServer);	
+	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { return false; }
+
+	unwrapPosition = 0;
 	unwrapData(&streamFromServer, &packageFromServer);
 	if(!getEasyRPC_Return_Integer(&packageFromServer, returnValue)) { return false; }
 	easyRPC_ClientConnection_Disconnect();

@@ -21,8 +21,9 @@ public class Client {
     public static void main(String[] args) {           
         System.out.println("Starting client");        
         EasyRPCBaseCall easyRPCBaseCall = new EasyRPCBaseCall();
-        easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
-        //easyRPCBaseCall.connection = new EasyRPCClientTCP("192.168.10.19", 2000);
+        //easyRPCBaseCall.connection = new EasyRPCClientTCP("127.0.0.1", 2000);
+        //Linux
+        easyRPCBaseCall.connection = new EasyRPCClientTCP("192.168.15.2", 2000);
         try {
             boolean isOK = easyRPCBaseCall.setFunctionName("subtract")
                     .setReturnType(TypeData.Float)
