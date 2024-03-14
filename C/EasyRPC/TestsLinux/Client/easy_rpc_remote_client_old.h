@@ -5,20 +5,9 @@
 #include "package_builders/build_package_to_client.h"
 #include "package_builders/build_package_from_client_or_server.h"
 /* ---------------------------------------------------------------------------*/
-void easyRPC_Client_BeforeSend(){
-	easyRPC_ProcessData = easyRPC_ProcessDataFromServer;
-	//PUT YOUR CODE HERE
-}
-/* ---------------------------------------------------------------------------*/
-void easyRPC_Client_AfterSend(){
-	easyRPC_ProcessData = easyRPC_ProcessDataFromClient;
-	//PUT YOUR CODE HERE
-}
-/* ---------------------------------------------------------------------------*/
 bool remote_sum(int *returnValue, int a, int b){
-	easyRPC_Client_BeforeSend();
 	if (!easyRPC_ClientConnection_IsConnected()) {
-	  if (!easyRPC_ClientConnection_Connect()) { easyRPC_Client_AfterSend(); return false; }
+	  if (!easyRPC_ClientConnection_Connect()) { return false; }
 	}
 
 	//Build package
@@ -35,20 +24,29 @@ bool remote_sum(int *returnValue, int a, int b){
 	wrapData(&streamToServer, &streamData.buffer[0], streamData.size);
 
 	//Send and receive data
-	if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) { easyRPC_Client_AfterSend(); return false; }
-	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend(); return false; }
-	//Check receive ACK
+	if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) { return false; }
+
+	//Check Ack
+	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { 
+		printf("1) Fail ACK!\n");
+		return false; 
+	}
+	printf("Check ACK!\n");		
+	
 	EasyRPCPackage packageFromServer;
 	unwrapData(&streamFromServer, &packageFromServer);
-	if(!isACK_EasyRPC()){ easyRPC_Client_AfterSend(); return false; }
-	//Read response
-	resetStream(&streamFromServer);
-	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend(); return false; }
+	if(!isACK_EasyRPC()){ 
+		printf("2) Fail ACK!\n");
+		return false; 
+	}
+
+	resetStream(&streamFromServer);	
+	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { return false; }
+
 	unwrapPosition = 0;
 	unwrapData(&streamFromServer, &packageFromServer);
-	if(!getEasyRPC_Return_Integer(&packageFromServer, returnValue)) { easyRPC_Client_AfterSend(); return false; }
+	if(!getEasyRPC_Return_Integer(&packageFromServer, returnValue)) { return false; }
 	easyRPC_ClientConnection_Disconnect();
-	easyRPC_Client_AfterSend();
 	return true;
 }
 /* ---------------------------------------------------------------------------*/

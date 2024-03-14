@@ -122,10 +122,18 @@ string BuildClientFunctions::buildFunction(FunctionInfo* function) {
 	content += addCodeWithSpace("if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) { easyRPC_Client_AfterSend(); return false; }\n");
 	content += addCodeWithSpace("if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend(); return false; }\n");
 
-	if (function->returnInfo.type != Void) {
-		content += addCodeWithSpace("EasyRPCPackage packageFromServer;\n");
-		content += addCodeWithSpace("unwrapData(&streamFromServer, &packageFromServer);\n");
+	content += addCodeWithSpace("//Check receive ACK\n");
+	content += addCodeWithSpace("EasyRPCPackage packageFromServer;\n");
+	content += addCodeWithSpace("unwrapData(&streamFromServer, &packageFromServer);\n");
+	content += addCodeWithSpace("if(!isACK_EasyRPC()){ easyRPC_Client_AfterSend(); return false; }\n");
+	
+	content += addCodeWithSpace("//Read response\n");
+	content += addCodeWithSpace("resetStream(&streamFromServer);\n");
+	content += addCodeWithSpace("if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend(); return false; }\n");
 
+	if (function->returnInfo.type != Void) {
+		content += addCodeWithSpace("unwrapPosition = 0;\n");		
+		content += addCodeWithSpace("unwrapData(&streamFromServer, &packageFromServer);\n");
 		content += addCodeWithSpace("if(!" + typeDataParser.TypeToReturnNameGetFunction(function->returnInfo.type) + "(&packageFromServer, returnValue)) { easyRPC_Client_AfterSend(); return false; }\n");
 	}
 

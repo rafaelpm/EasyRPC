@@ -2,7 +2,7 @@
 #define _INFO_PARAMS_H
 #include <stdio.h>
 /* ---------------------------------------------------------------------------*/
-#define VERSION "1.0.0"
+#define VERSION "1.0.1"
 
 enum {
     Both = 0,
