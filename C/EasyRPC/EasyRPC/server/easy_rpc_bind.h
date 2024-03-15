@@ -1,6 +1,7 @@
 #ifndef _EASY_RPC_BIND_H
 #define _EASY_RPC_BIND_H
 /* ---------------------------------------------------------------------------*/
+
 #define EASY_RPC_FUNCTION_NOT_FOUND -1
 #ifndef EASY_RPC_MAX_FUNCTIONS
 #define EASY_RPC_MAX_FUNCTIONS 10
@@ -10,6 +11,8 @@ struct {
 	char functions[EASY_RPC_MAX_FUNCTIONS][EASY_RPC_MAX_SIZE_NAME_FUNCTIONS];
 	int totalFunctions;
 } EasyRPCBind;
+
+#include "../entities/easy_rpc_package.h"
 
 #define EASY_RPC_BIND_RESET memset(&EasyRPCBind.functions[0], 0, sizeof(EasyRPCBind));
 /* ---------------------------------------------------------------------------*/
