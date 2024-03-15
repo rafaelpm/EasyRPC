@@ -30,3 +30,4 @@ read.lock
 /C/build
 /C/EasyRPC/TestsLinux/Server/build
 /C/EasyRPC/TestsLinux/Client/build
+/C/EasyRPC/EasyRPC/build
