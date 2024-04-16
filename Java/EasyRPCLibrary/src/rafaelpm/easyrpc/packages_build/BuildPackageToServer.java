@@ -20,6 +20,9 @@ public class BuildPackageToServer extends EasyRPCPackageBase {
             setString(easyPackage.functionName, dos);
             dos.writeByte(easyPackage.returnInfo.type);
             
+            //Total Params
+            dos.writeByte(easyPackage.params.size());
+            
             for(DataInfo dataInfo: easyPackage.params){
                 dos.writeByte(dataInfo.type);
                 if(dataInfo.type == TypeData.BinaryArray.id){

@@ -26,9 +26,14 @@ public class BuildPackageFromClient extends EasyRPCPackageBase {
 
         easyPackage.returnInfo = new DataInfo();
         easyPackage.returnInfo.type = dis.readByte();
+        
+        int totalParams = dis.readByte();
 
         DataInfo dataInfo;        
-        while(dis.available() > 0){
+        for(int i=0; i < totalParams; i++){
+            if(dis.available() == 0){
+                break;
+            }
             dataInfo = new DataInfo();
             dataInfo.type = dis.readByte();
             if(dataInfo.type == TypeData.BinaryArray.id){                

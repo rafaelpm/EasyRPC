@@ -104,7 +104,7 @@ public class EasyRPCPackageBase {
     }
     
     public boolean setData(DataInputStream dis) throws Exception {
-        if(dis.available() <= headerSize){ 
+        if(dis.available() < headerSize){ 
             countEndData++;
             if(countEndData >= maxEmptyBufferTest){
                 countEndData = 0;
@@ -192,9 +192,9 @@ public class EasyRPCPackageBase {
                             break;
                         }
                         
-                        /*bufferData = new byte[dis.available()];
+                        bufferData = new byte[dis.available()];
                         dis.read(bufferData);                        
-                        dis = new DataInputStream(new ByteArrayInputStream(bufferData));*/
+                        dis = new DataInputStream(new ByteArrayInputStream(bufferData));
                                                 
                         if(!processData(dis)){
                             return false;

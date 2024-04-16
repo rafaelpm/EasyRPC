@@ -46,12 +46,14 @@ public class EasyRPCServerParser implements Runnable {
             }
         }
         
+        //System.out.println("Server->ACK");
         BuildPackageToClient buildPackageToClient = new BuildPackageToClient();        
         channel.send(buildPackageToClient.getAck());   
         
         resetTimeout();
         delay_ms(100);
         
+        //System.out.println("Server->Answer");
         for(EasyRPCBaseBindClass bindClass: classes){
             try {
                 if(bindClass.process(builderFromClient.easyPackage, bindClass)){                    
