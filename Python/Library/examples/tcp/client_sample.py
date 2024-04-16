@@ -3,9 +3,9 @@ sys.path.append('../../')
 sys.path.append('../../client/')
 
 from easyrpc_typedata import EasyRPCTypeData
-from easyrpc_client import EasyRPCClient
+from easyrpc_client_tcp import EasyRPCClientTCP
 
-sut = EasyRPCClient()
+sut = EasyRPCClientTCP()
 sut.connect("127.0.0.1",2000)
 res = sut.call(EasyRPCTypeData.Integer,"sum",[1,2])
 if res.get_value_param() != 3:

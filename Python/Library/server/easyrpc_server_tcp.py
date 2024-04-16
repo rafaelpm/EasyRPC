@@ -3,7 +3,7 @@ import sys
 sys.path.append('../')
 from easyrpc_package_server import EasyRPCPackageServer
 
-class EasyRPCServer:
+class EasyRPCServerTCP:
 
     port = 2000
     sock = None

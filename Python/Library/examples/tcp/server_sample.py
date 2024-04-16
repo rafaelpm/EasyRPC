@@ -3,7 +3,7 @@ sys.path.append('../../')
 sys.path.append('../../server/')
 
 from server.easyrpc_base import EasyRPCBase
-from server.easyrpc_server import EasyRPCServer
+from server.easyrpc_server_tcp import EasyRPCServerTCP
 
 class Calcule(EasyRPCBase):
     def sum(self,a,b):
@@ -20,6 +20,6 @@ class Calcule(EasyRPCBase):
 
 obj = Calcule()
 
-server = EasyRPCServer(2000)
+server = EasyRPCServerTCP(2000)
 server.methods += [obj]
 server.finish()

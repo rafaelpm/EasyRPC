@@ -1,7 +1,7 @@
 import socket
 from easyrpc_package_client import EasyRPCPackageClient
 
-class EasyRPCClient:
+class EasyRPCClientTCP:
 
     sock = None
     close_client = False
