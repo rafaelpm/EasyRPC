@@ -20,6 +20,8 @@ class EasyRPCPackageClient(EasyRPCPackageBase):
         streamPackage.writeString(self.method_name)
         streamPackage.writeByte(self.return_info.type)
 
+        streamPackage.writeByte(len(self.params))
+
         for param in self.params:
             streamPackage.writeByte(param.type)
             if param.type == EasyRPCTypeData.BinaryArray:

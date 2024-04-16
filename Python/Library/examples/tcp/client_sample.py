@@ -1,6 +1,6 @@
 import sys
-sys.path.append('../')
-sys.path.append('../client/')
+sys.path.append('../../')
+sys.path.append('../../client/')
 
 from easyrpc_typedata import EasyRPCTypeData
 from easyrpc_client import EasyRPCClient

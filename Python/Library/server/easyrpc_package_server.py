@@ -27,14 +27,21 @@ class EasyRPCPackageServer(EasyRPCPackageBase):
         self.return_info = EasyRPCDataInfo()
         self.return_info.type = self.streamData.readByte()
 
-        while self.streamData.is_end_read_len(3) == False:
+        total_params = self.streamData.readByte()
+
+        #print("total_params: ", total_params)
+
+        for i in range(total_params):
+            if self.streamData.is_end_read_len(3) == True:
+                return False
+
             param = EasyRPCDataInfo()
-            param.type = self.streamData.readByte()            
+            param.type = self.streamData.readByte()
             if param.type == EasyRPCTypeData.BinaryArray:
-                param.value_bin = self.streamData.readBinaryArray()                
+                param.value_bin = self.streamData.readBinaryArray()
             else:
                 param.value = self.streamData.readString()
-
+            
             #print(param.value)
             self.params += [param]
 

@@ -1,6 +1,6 @@
 import sys
-sys.path.append('../')
-sys.path.append('../server/')
+sys.path.append('../../')
+sys.path.append('../../server/')
 
 from server.easyrpc_base import EasyRPCBase
 from server.easyrpc_server import EasyRPCServer
