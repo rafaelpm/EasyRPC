@@ -34,10 +34,10 @@ class EasyRPCPackageClient(EasyRPCPackageBase):
     def set_data_from_server(self, data):
         self.method_name = ''
         self.set_data(data)
-        if self._mount_position <= self._max_positions:
+        if self._mount_position < self._max_positions:            
             return False
         
-        if self.isAck() == True:
+        if self.isAck() == True:            
             return True
         
         self.method_name = self.streamData.readString()

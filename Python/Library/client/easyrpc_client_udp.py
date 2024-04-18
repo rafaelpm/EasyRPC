@@ -1,7 +1,7 @@
 import socket
 from easyrpc_package_client import EasyRPCPackageClient
 
-class EasyRPCClientTCP:
+class EasyRPCClientUDP:
 
     sock = None    
     methods = []
@@ -9,13 +9,14 @@ class EasyRPCClientTCP:
     conn = None
     addr = None
     sequence = 0
+    host = ""
+    port = 0
     
     def connect(self, host, port):        
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((host, port))
-        #self.sock.listen()
-        #(self.conn, self.addr) = self.sock.accept()
-         
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.host = host
+        self.port = port
+                 
     def call(self, typeReturn, name, params):
         pkt_send = EasyRPCPackageClient()
         pkt_send.params.clear()
@@ -24,24 +25,21 @@ class EasyRPCClientTCP:
         for param in params:
             pkt_send.add_param(param)
         data = pkt_send.get_data_to_server()  
-        #print("=> ",data)
-        self.sock.sendall(bytes(data))
+        
+        self.sock.sendto(bytes(data), (self.host, self.port))
 
         del pkt_send
 
         # Read ACK
-        data = self.sock.recv(1024)
-        #print("<= ",data)
+        data = self.sock.recv(8)        
         pkt_read = EasyRPCPackageClient()
-        if pkt_read.set_data_from_server(data) == False:
+        if pkt_read.set_data_from_server(data) == False:            
+            return        
+        if pkt_read.isAck() == False:            
             return
         
-        if pkt_read.isAck() == False:
-            return
-
         # Read Answer
-        data = self.sock.recv(1024)
-        #print("<= ",data)
+        data = self.sock.recv(128)        
         pkt_read = EasyRPCPackageClient()
         if pkt_read.set_data_from_server(data) == False:
             return
