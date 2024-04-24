@@ -15,8 +15,17 @@ bool easyRPC_ProcessDataFromClient(Stream* stream, EasyRPCPackage* packageReturn
 		return false;
 	}
 
+	int totalParams = 0;
+	if (!readByte(stream, (uint8_t*)&totalParams)) {
+		return false;
+	}
+
 	int p = 0;
-	while (!isReadEOS_Plus(stream, 1)) {
+	for(int i = 0; i < totalParams; i++){
+
+		if(!isReadEOS_Plus(stream, 1)) {
+			break;
+		}
 		if (!readByte(stream, (uint8_t *) &packageReturn->params[p].type)) {
 			return false;
 		}		

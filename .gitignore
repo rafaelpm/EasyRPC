@@ -31,3 +31,4 @@ read.lock
 /C/EasyRPC/TestsLinux/Server/build
 /C/EasyRPC/TestsLinux/Client/build
 /C/EasyRPC/EasyRPC/build
+/C/EasyRPC/TestsLinux/ClientUDP/build/

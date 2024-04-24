@@ -1,5 +1,5 @@
-#ifndef _EASY_RPC_CLIENT_LINUX_H
-#define _EASY_RPC_CLIENT_LINUX_H
+#ifndef _EASY_RPC_CLIENT_LINUX_TCP_H
+#define _EASY_RPC_CLIENT_LINUX_TCP_H
 /* ---------------------------------------------------------------------------*/
 #include "client/easy_rpc_client_connection.h"
 #include "libstream.h"

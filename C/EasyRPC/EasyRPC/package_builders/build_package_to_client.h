@@ -13,6 +13,12 @@ bool easyRPC_toBytesToServer(EasyRPCPackage* package, Stream* streamReturn) {
 	if (!writeByte(streamReturn, package->returnInfo.type)) {
 		return false;
 	}
+
+	//Total Params
+	if (!writeByte(streamReturn, package->totalParams)) {
+		return false;
+	}
+
 	for (int p = 0; p < package->totalParams; p++) {
 		if (!writeByte(streamReturn, package->params[p].type)) {
 			return false;
