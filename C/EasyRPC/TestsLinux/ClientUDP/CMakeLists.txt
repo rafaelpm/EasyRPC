@@ -4,9 +4,13 @@ add_definitions( -DLINUX )
 
 set(CMAKE_BUILD_TYPE Debug)
 
-include_directories("/home/rafael/Documents/GitHub/EasyRPC/C/EasyRPC/EasyRPC")
-include_directories("/home/rafael/Documents/GitHub/EmbeddedCleanArch/libstream/libstream")
-include_directories("/home/rafael/Documents/GitHub/EmbeddedCleanArch/libdebug/libdebug")
+# Para Docker
+include_directories("/root/C/EasyRPC/EasyRPC")
+include_directories("/root/C/libstream/libstream")
+
+#include_directories("/home/rafael/Documents/GitHub/EasyRPC/C/EasyRPC/EasyRPC")
+#include_directories("/home/rafael/Documents/GitHub/EmbeddedCleanArch/libstream/libstream")
+#include_directories("/home/rafael/Documents/GitHub/EmbeddedCleanArch/libdebug/libdebug")
 
 add_executable (test_client "test_client.cpp" )
 

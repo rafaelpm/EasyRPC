@@ -61,9 +61,9 @@ public class ChannelClientServerUDP extends ChannelClientServer {
     }
     
     private boolean startSocket(){
-        if(socket != null){
+        /*if(socket != null){
             return true;
-        }
+        }*/
         try {
             socket = new DatagramSocket();            
             return true;
@@ -78,6 +78,7 @@ public class ChannelClientServerUDP extends ChannelClientServer {
         if(!startSocket()){
             return false;
         }
+        System.out.println("SendUDP ("+host+":"+port+"): "+data.length+" bytes");
         try {
             InetAddress address = InetAddress.getByName(host);
             DatagramPacket datagram = new DatagramPacket(data, data.length, address, port); 

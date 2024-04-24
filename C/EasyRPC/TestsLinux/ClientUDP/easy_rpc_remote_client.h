@@ -36,14 +36,28 @@ bool remote_sum(int *returnValue, int a, int b){
 
 	//Send and receive data
 	if (!easyRPC_ClientConnection_Send(&streamToServer.buffer[0], streamToServer.size)) { easyRPC_Client_AfterSend(); return false; }
-	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend(); return false; }
+	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend();
+		//printf("Fail READ PACKAGE ACK\n");
+	 	return false; 
+	}
+
 	//Check receive ACK
 	EasyRPCPackage packageFromServer;
 	unwrapData(&streamFromServer, &packageFromServer);
-	if(!isACK_EasyRPC()){ easyRPC_Client_AfterSend(); return false; }
+	if(!isACK_EasyRPC()){ easyRPC_Client_AfterSend(); 
+		//printf("Fail ACK\n");
+		return false; 
+	}
+	//printf("READ ACK\n");
+
 	//Read response
 	resetStream(&streamFromServer);
-	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { easyRPC_Client_AfterSend(); return false; }
+	if (!easyRPC_ClientConnection_Receive(&streamFromServer.buffer[0], &streamFromServer.size, 1000)) { 
+		easyRPC_Client_AfterSend(); 
+		//printf("Fail Response\n");
+		return false; 
+	}
+	//printf("READ RESPONSE\n");
 	unwrapPosition = 0;
 	unwrapData(&streamFromServer, &packageFromServer);
 	if(!getEasyRPC_Return_Integer(&packageFromServer, returnValue)) { easyRPC_Client_AfterSend(); return false; }

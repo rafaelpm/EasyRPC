@@ -16,7 +16,7 @@
 int clientSocket = INVALID_SOCKET;
 bool isConnected = false;
 struct sockaddr_in servAddr;
-fd_set read_fds;
+
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ClientConnection_SetTimeout(int seconds, int ms);
 /* ---------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ bool easyRPC_ClientConnection_ConnectLinuxTCP(){
 }
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ClientConnection_SetTimeout(int seconds, int ms){
-    
+    fd_set read_fds;
     struct timeval timeout;
     FD_ZERO(&read_fds);
     FD_SET(clientSocket, &read_fds);

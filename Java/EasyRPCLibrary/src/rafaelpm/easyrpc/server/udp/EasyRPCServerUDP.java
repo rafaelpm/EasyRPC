@@ -74,9 +74,10 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
             try {
                 //Aguarda receber
                 server.receive(packet);
-                addClient(packet);
-                /*ChannelClientServerUDP channelClientServerUDP = new ChannelClientServerUDP(packet);
-                easyRPCServerMatriz.startThread(channelClientServerUDP);*/
+                if(packet != null){
+                    
+                }
+                addClient(packet);                
             } catch (IOException ex) {
                 Logger.getLogger(EasyRPCServerUDP.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -33,27 +33,27 @@ public class EasyRPCServerParser implements Runnable {
     private void onData() {
         BuildPackageFromClient builderFromClient = new BuildPackageFromClient();
         while(builderFromClient.statePackage != StatePackage.Complete){
-            try {
-                delay_ms(100);
+            try {                
                 builderFromClient.setData(channel.receive());
                 if(builderFromClient.statePackage == StatePackage.Error){
                     System.out.println("EasyRPCServer Error Package");
                     return;
-                }
+                }                
             } catch (Exception ex) {
                 Logger.getLogger(EasyRPCServerParser.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
+            delay_ms(100);
         }
         
-        //System.out.println("Server->ACK");
+        System.out.println("Server->ACK");
         BuildPackageToClient buildPackageToClient = new BuildPackageToClient();        
         channel.send(buildPackageToClient.getAck());   
         
         resetTimeout();
         delay_ms(100);
         
-        //System.out.println("Server->Answer");
+        System.out.println("Server->Answer");
         for(EasyRPCBaseBindClass bindClass: classes){
             try {
                 if(bindClass.process(builderFromClient.easyPackage, bindClass)){                    

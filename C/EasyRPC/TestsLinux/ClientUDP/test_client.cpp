@@ -11,7 +11,8 @@ int main(int argc, char **argv){
     printf("TestLinuxClient\n");
 
     easyRPC_ProcessData = easyRPC_ProcessDataFromServer;	
-    easyRPC_ClientLinuxUDP_Setup((char*)"192.168.0.60", 2000);
+    //easyRPC_ClientLinuxUDP_Setup((char*)"127.0.0.1", 2000);
+    easyRPC_ClientLinuxUDP_Setup((char*)"192.168.2.7", 2000, 2001);
 
     int retIntValue = 0;
 	if (!remote_sum(&retIntValue, 1, 4)) {
