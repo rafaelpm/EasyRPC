@@ -97,7 +97,7 @@ bool easyRPC_ClientConnection_ReceiveLinuxUDP(uint8_t* data, uint16_t *bytesRead
     return (*bytesRead >= 8);
 }
 /* ---------------------------------------------------------------------------*/
-bool easyRPC_ClientLinuxUDP_Setup(char *host, int portClient, int portServer) {
+bool easyRPC_ClientLinuxUDP_Setup(char *host, int portClient) {
     if((clientSocket = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
         return false;
     }
@@ -111,14 +111,14 @@ bool easyRPC_ClientLinuxUDP_Setup(char *host, int portClient, int portServer) {
         return false;
     }
 
-    memset(&servAddr, 0, sizeof(servAddr));    
+    /*memset(&servAddr, 0, sizeof(servAddr));
     servAddr.sin_family = AF_INET;
     servAddr.sin_addr.s_addr = INADDR_ANY;
-    servAddr.sin_port = htons(portServer);
+    servAddr.sin_port = htons(portClient)+1;
 
     if (bind(clientSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) < 0) {
         return false;
-    }
+    }*/
 
     easyRPC_ClientConnection_IsConnected = easyRPC_ClientConnection_IsConnectedLinuxUDP;
 	easyRPC_ClientConnection_Connect = easyRPC_ClientConnection_ConnectLinuxUDP;

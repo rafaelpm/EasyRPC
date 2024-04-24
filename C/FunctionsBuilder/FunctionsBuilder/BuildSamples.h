@@ -53,7 +53,8 @@ string BuildSamples::buildSampleTCPServer() {
 	string content = addCodeWithSpace("#ifndef _SAMPLE_SERVER_H\n");
     content += addCodeWithSpace("#define _SAMPLE_SERVER_H\n");
     content += spaceLine();
-    content += addCodeWithSpace("#include <server/easy_rpc_server_linux_tcp.h>\n");
+    content += addCodeWithSpace("//#include <server/easy_rpc_server_linux_tcp.h>\n");
+    content += addCodeWithSpace("#include <server/easy_rpc_server_linux_udp.h>\n");
     content += addCodeWithSpace("#include \"easy_rpc/easy_rpc_server_bind.h\"\n");
     content += spaceLine();
     content += addCodeWithSpace("//PUT YOUR CODE HERE - BEGIN\n");
@@ -62,7 +63,8 @@ string BuildSamples::buildSampleTCPServer() {
     content += addCodeWithSpace("void start_easyrpc_server(){\n");
     buildBeginSpace(1, 0);
     content += addCodeWithSpace("easyRPC_Server_Bind_Functions();\n");
-    content += addCodeWithSpace("easyRPC_ServerLinuxTCP_Setup(2000);\n");
+    content += addCodeWithSpace("//easyRPC_ServerLinuxTCP_Setup(2000);\n");
+    content += addCodeWithSpace("easyRPC_ServerLinuxUDP_Setup(2000);\n");
     content += addCodeWithSpace("if (!easyRPC_Server_Listen()) { printf(\"Fail when start listen TCP port 2000!\\n\"); return; }\n");    
     content += addCodeWithSpace("while (true) {\n");
     buildBeginSpace(2, 0);
@@ -87,8 +89,24 @@ string BuildSamples::buildSampleTCPClient() {
     content += addCodeWithSpace("#define _SAMPLE_CLIENT_H\n");
 
     content += spaceLine();
-    content += addCodeWithSpace("#include <server/easy_rpc_client_linux_tcp.h>\n");
+    content += addCodeWithSpace("//#include <server/easy_rpc_client_linux_tcp.h>\n");
+    content += addCodeWithSpace("#include <server/easy_rpc_client_linux_udp.h>\n");
     content += addCodeWithSpace("#include \"easy_rpc/easy_rpc_remote_client.h\"\n");
+    content += spaceLine();
+
+    content += addCodeWithSpace("void easyrpc_client_setup(){\n");
+    buildBeginSpace(1, 0);
+    content += addCodeWithSpace("easyRPC_ProcessData = easyRPC_ProcessDataFromServer;\n");
+    content += addCodeWithSpace("easyRPC_ClientLinuxUDP_Setup((char*)\"127.0.0.1\", 2000);\n");
+    content += addCodeWithSpace("//Sample call sum remote function\n");
+    content += addCodeWithSpace("//int retIntValue = 0;\n");
+    content += addCodeWithSpace("//if (!remote_sum(&retIntValue, 1, 4)) {\n");
+    content += addCodeWithSpace("//printf(\"remote_sum = Error\\n\");\n");
+    content += addCodeWithSpace("//}else{\n");
+    content += addCodeWithSpace("//printf(\"remote_sum = Success\\n\");\n");
+    content += addCodeWithSpace("//}\n");
+    buildBeginSpace(0, 0);
+    content += addCodeWithSpace("}\n");
 
     content += addCodeWithSpace("#endif");
     return content;
