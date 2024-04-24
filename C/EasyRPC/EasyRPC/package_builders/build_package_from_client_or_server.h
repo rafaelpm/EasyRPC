@@ -15,36 +15,34 @@ bool easyRPC_ProcessDataFromClient(Stream* stream, EasyRPCPackage* packageReturn
 		return false;
 	}
 
-	int totalParams = 0;
-	if (!readByte(stream, (uint8_t*)&totalParams)) {
+	packageReturn->totalParams = 0;
+	if (!readByte(stream, (uint8_t*)&packageReturn->totalParams)) {
 		return false;
 	}
+	//printf("easyRPC_ProcessDataFromClient->TotalParams: %d\n",totalParams);
 
-	int p = 0;
-	for(int i = 0; i < totalParams; i++){
-
-		if(!isReadEOS_Plus(stream, 1)) {
+	for(int p = 0; p < packageReturn->totalParams; p++){		
+		if(isReadEOS_Plus(stream, 1)) {			
 			break;
 		}
-		if (!readByte(stream, (uint8_t *) &packageReturn->params[p].type)) {
+		if (!readByte(stream, (uint8_t *) &packageReturn->params[p].type)) {			
 			return false;
 		}		
 		memset(&packageReturn->params[p].value[0], 0, EASY_RPC_DATA_INFO_VALUE_SIZE);
 		
 		if (packageReturn->params[p].type == BinaryArray) {
-			if (!getEasyRPC_BinaryArray(stream, (uint8_t*)&packageReturn->params[p].value[0], &packageReturn->params[p].valueSize)) {
+			if (!getEasyRPC_BinaryArray(stream, (uint8_t*)&packageReturn->params[p].value[0], &packageReturn->params[p].valueSize)) {				
 				return false;
 			}
 		} else if (packageReturn->params[p].type != Void) {
-			if (!getEasyRPC_StringLen(stream, (uint8_t *) &packageReturn->params[p].value[0], &packageReturn->params[p].valueSize)) {
+			if (!getEasyRPC_StringLen(stream, (uint8_t *) &packageReturn->params[p].value[0], &packageReturn->params[p].valueSize)) {				
 				return false;
 			}
-		}		
-		p++;
-	}
-	packageReturn->totalParams = p;
+		}						
+	}	
+	
 	#ifdef DEBUG
-	printf("TotalParams: %d\n",p);
+	printf("TotalParams: %d\n",packageReturn->totalParams);
 	#endif
 
 	return true;

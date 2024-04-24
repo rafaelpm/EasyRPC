@@ -33,10 +33,10 @@ void setEasyRPC_Param_Integer(EasyRPCPackage* package, int value) {
 }
 /* ---------------------------------------------------------------------------*/
 bool getEasyRPC_Param_Integer(EasyRPCPackage* package, int* value, int position) {
-	if (position >= package->totalParams) {
+	if (position >= package->totalParams) {		
 		return false;
 	}
-	if (package->params[position].type != Integer) {
+	if (package->params[position].type != Integer) {		
 		return false;
 	}
 	*value = atoi(package->params[position].value);
