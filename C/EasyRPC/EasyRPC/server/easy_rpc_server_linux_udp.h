@@ -20,15 +20,15 @@
 #include "../package_builders/build_package_to_client.h"
 /* ---------------------------------------------------------------------------*/
 #define INVALID_SOCKET 0
-struct sockaddr_in servAddr;
+struct sockaddr_in servServerAddr;
 int linuxServerUDP_port = 2000;
 int serverSocket = INVALID_SOCKET;
-bool isConnected = false;
+bool isServerConnected = false;
 
 #define BUFFER_UDP_SIZE 1024    
 typedef struct {
     pthread_t thread;
-    sockaddr_in clientAddr;
+    sockaddr_in clientServerAddr;
     socklen_t client_addr_len;
     bool stop_thread;
     uint8_t buffer[BUFFER_UDP_SIZE];
@@ -36,7 +36,7 @@ typedef struct {
 } THREAD_UDP;
 THREAD_UDP thread_udp;
 
-struct sockaddr_in clientAddr;
+struct sockaddr_in clientServerAddr;
 char ipClient[INET_ADDRSTRLEN];
 unsigned short portClient = 0;
 /* ---------------------------------------------------------------------------*/
@@ -46,12 +46,12 @@ bool easyRPC_ServerLinuxUDP_Listen(){
     timeout.tv_usec = 0;
     setsockopt(serverSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
 
-    memset(&servAddr, 0, sizeof(servAddr));    
-    servAddr.sin_family = AF_INET;
-    servAddr.sin_addr.s_addr = INADDR_ANY;
-    servAddr.sin_port = htons(linuxServerUDP_port);
+    memset(&servServerAddr, 0, sizeof(servServerAddr));    
+    servServerAddr.sin_family = AF_INET;
+    servServerAddr.sin_addr.s_addr = INADDR_ANY;
+    servServerAddr.sin_port = htons(linuxServerUDP_port);
 
-    if (bind(serverSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) < 0) {
+    if (bind(serverSocket, (struct sockaddr*)&servServerAddr, sizeof(servServerAddr)) < 0) {
         return false;
     }
     return true;
@@ -59,12 +59,12 @@ bool easyRPC_ServerLinuxUDP_Listen(){
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ServerLinuxUDP_Send(uint8_t *data, uint16_t dataLen){
 
-    memset(&clientAddr, 0, sizeof(clientAddr));
-    clientAddr.sin_family = AF_INET;
-    clientAddr.sin_port = htons(portClient);
-    clientAddr.sin_addr.s_addr = inet_addr(ipClient);
+    memset(&clientServerAddr, 0, sizeof(clientServerAddr));
+    clientServerAddr.sin_family = AF_INET;
+    clientServerAddr.sin_port = htons(portClient);
+    clientServerAddr.sin_addr.s_addr = inet_addr(ipClient);
     
-    if (sendto(serverSocket, data, dataLen, 0, (struct sockaddr *)&clientAddr, sizeof(clientAddr)) == -1) {
+    if (sendto(serverSocket, data, dataLen, 0, (struct sockaddr *)&clientServerAddr, sizeof(clientServerAddr)) == -1) {
         printf("Fail to send data udp!\n");
         return false;
     }
@@ -95,28 +95,28 @@ void easyRPC_ServerLinuxUDP_Close(){
 }
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ServerLinuxUDP_IsConnected(){
-    if(isConnected){
-        isConnected = false;
+    if(isServerConnected){
+        isServerConnected = false;
         return true;
     }
     return false;
 }
 /* ---------------------------------------------------------------------------*/
 void *threadReadDataFromUDPServerLinux(void *arg){
-    thread_udp.client_addr_len = sizeof(thread_udp.clientAddr);
+    thread_udp.client_addr_len = sizeof(thread_udp.clientServerAddr);
     while(!thread_udp.stop_thread){
         int recv_len = recvfrom(serverSocket, &thread_udp.buffer[thread_udp.len], BUFFER_UDP_SIZE, 0,
-                            (struct sockaddr*)&thread_udp.clientAddr, &thread_udp.client_addr_len);
+                            (struct sockaddr*)&thread_udp.clientServerAddr, &thread_udp.client_addr_len);
         if (recv_len <= 0) {
             usleep(10000);
             continue;
         }        
-        inet_ntop(AF_INET, &(thread_udp.clientAddr.sin_addr), ipClient, INET_ADDRSTRLEN);
-        portClient = ntohs(thread_udp.clientAddr.sin_port);
+        inet_ntop(AF_INET, &(thread_udp.clientServerAddr.sin_addr), ipClient, INET_ADDRSTRLEN);
+        portClient = ntohs(thread_udp.clientServerAddr.sin_port);
         //printf("Endereço IP do cliente: %s:%d\n", ipClient, portClient);
         
         thread_udp.len += recv_len;
-        isConnected = true;
+        isServerConnected = true;
         //printf("ReadUDP: %d / %d bytes\n",recv_len, thread_udp.len);
         processDataOnServer();
     }

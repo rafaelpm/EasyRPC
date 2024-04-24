@@ -14,7 +14,7 @@ bool easyRPC_toBytesToServer(EasyRPCPackage* package, Stream* streamReturn) {
 		return false;
 	}
 
-	printf("easyRPC_toBytesToServer->TotalParams: %d\n",package->totalParams);
+	//printf("easyRPC_toBytesToServer->TotalParams: %d\n",package->totalParams);
 
 	//Total Params
 	if (!writeByte(streamReturn, package->totalParams)) {

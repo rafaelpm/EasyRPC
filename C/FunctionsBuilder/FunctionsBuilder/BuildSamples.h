@@ -89,8 +89,8 @@ string BuildSamples::buildSampleTCPClient() {
     content += addCodeWithSpace("#define _SAMPLE_CLIENT_H\n");
 
     content += spaceLine();
-    content += addCodeWithSpace("//#include <server/easy_rpc_client_linux_tcp.h>\n");
-    content += addCodeWithSpace("#include <server/easy_rpc_client_linux_udp.h>\n");
+    content += addCodeWithSpace("//#include <client/easy_rpc_client_linux_tcp.h>\n");
+    content += addCodeWithSpace("#include <client/easy_rpc_client_linux_udp.h>\n");
     content += addCodeWithSpace("#include \"easy_rpc/easy_rpc_remote_client.h\"\n");
     content += spaceLine();
 
