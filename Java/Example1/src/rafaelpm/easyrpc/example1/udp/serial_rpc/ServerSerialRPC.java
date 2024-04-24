@@ -1,10 +1,7 @@
 package rafaelpm.easyrpc.example1.udp.serial_rpc;
 
-import rafaelpm.easyrpc.example1.udp.*;
-import rafaelpm.easyrpc.example1.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rafaelpm.easyrpc.server.tcp.EasyRPCServerTCP;
 import rafaelpm.easyrpc.server.udp.EasyRPCServerUDP;
 
 /**

@@ -1,8 +1,8 @@
 #ifndef _SAMPLE_CLIENT_H
 #define _SAMPLE_CLIENT_H
 /* ---------------------------------------------------------------------------*/
-//#include <server/easy_rpc_client_linux_tcp.h>
-#include <server/easy_rpc_client_linux_udp.h>
+//#include <client/easy_rpc_client_linux_tcp.h>
+#include <client/easy_rpc_client_linux_udp.h>
 #include "easy_rpc/easy_rpc_remote_client.h"
 /* ---------------------------------------------------------------------------*/
 void easyrpc_client_setup(){
