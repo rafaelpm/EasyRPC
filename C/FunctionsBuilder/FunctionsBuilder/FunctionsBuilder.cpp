@@ -3,6 +3,7 @@
 #include "BuildClientFunctions.h"
 #include "InfoParams.h"
 #include "SaveContent.h"
+#include "BuildSamples.h"
 #include <string.h>
 
 using namespace std;
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
 	if(!readContent->open(Params.fileIn)){		
 		return 0;
 	}
+	BuildSamples *buildSamples = new BuildSamples();
 	BuildServerFunctions *buildServerFunctions;
 	BuildClientFunctions *buildClientFunctions;
 	ParserFunctions *parserFunctions = new ParserFunctions();
@@ -53,6 +55,9 @@ int main(int argc, char *argv[])
 			delete buildClientFunctions;
 			break;
 	}
+
+	buildSamples->saveFileOnPath(Params.pathOut);
+	delete buildSamples;
 
 	//printf("Content:\n%s\n", readContent->contentRead.c_str());
 

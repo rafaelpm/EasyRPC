@@ -259,6 +259,7 @@ string BuildServerFunctions::buildHeaders(ParserFunctions* parserFunctions) {
 	content += addCodeWithSpace("//#define EASY_RPC_DATA_INFO_VALUE_SIZE 255\n");
 	content += addCodeWithSpace("//#define _CALCULE_TIME\n");
 	content += addCodeWithSpace("//#define DEBUG\n");
+	content += addCodeWithSpace("//#define BUFFER_UDP_SIZE 1024\n");
 	content += spaceLine();
 	content += addCodeWithSpace("#include \"server/easy_rpc_bind.h\"\n");
 	content += spaceLine();
