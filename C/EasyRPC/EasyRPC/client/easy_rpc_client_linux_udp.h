@@ -111,14 +111,14 @@ bool easyRPC_ClientLinuxUDP_Setup(char *host, int portClient) {
         return false;
     }
 
-    /*memset(&servAddr, 0, sizeof(servAddr));
+    memset(&servAddr, 0, sizeof(servAddr));
     servAddr.sin_family = AF_INET;
     servAddr.sin_addr.s_addr = INADDR_ANY;
     servAddr.sin_port = htons(portClient)+1;
 
     if (bind(clientSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) < 0) {
         return false;
-    }*/
+    }
 
     easyRPC_ClientConnection_IsConnected = easyRPC_ClientConnection_IsConnectedLinuxUDP;
 	easyRPC_ClientConnection_Connect = easyRPC_ClientConnection_ConnectLinuxUDP;

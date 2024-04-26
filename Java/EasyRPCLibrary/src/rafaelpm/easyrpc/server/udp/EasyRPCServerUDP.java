@@ -16,6 +16,7 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
     private DatagramSocket server = null;
     private boolean enableBroadcast = false;
     private int port;
+    private int forceResponsePort = 0;
     private List<ChannelClientServerUDP> clients = new ArrayList<>();
     public EasyRPCServerParser easyRPCServerMatriz;
     
@@ -95,8 +96,14 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
         
         //Not found
         ChannelClientServerUDP channelClientServerUDP = new ChannelClientServerUDP(this, packet);        
+        channelClientServerUDP.setForceResponsePort(forceResponsePort);
         easyRPCServerMatriz.startThread(channelClientServerUDP);
         clients.add(channelClientServerUDP);        
+    }
+    
+    public EasyRPCServerUDP setForceResponsePort(int port){
+        this.forceResponsePort = port;
+        return this;
     }
     
     protected void removeClient(ChannelClientServerUDP channelClientServerUDP){

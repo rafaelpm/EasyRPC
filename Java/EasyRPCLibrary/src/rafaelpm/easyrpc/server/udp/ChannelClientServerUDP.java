@@ -18,7 +18,8 @@ public class ChannelClientServerUDP extends ChannelClientServer {
     private DatagramSocket socket;
     private ByteArrayOutputStream baos = new ByteArrayOutputStream();
     private EasyRPCServerUDP server;
-    
+    private int forceResponsePort = 0;
+        
     public ChannelClientServerUDP(EasyRPCServerUDP server, DatagramPacket packet){
         try {
             this.server = server;
@@ -29,6 +30,10 @@ public class ChannelClientServerUDP extends ChannelClientServer {
             Logger.getLogger(ChannelClientServerUDP.class.getName()).log(Level.SEVERE, null, ex);
         }
         startSocket();
+    }
+    
+    public void setForceResponsePort(int port){
+        this.forceResponsePort = port;
     }
     
     private void setHost(String value){
@@ -78,10 +83,19 @@ public class ChannelClientServerUDP extends ChannelClientServer {
         if(!startSocket()){
             return false;
         }
-        System.out.println("SendUDP ("+host+":"+port+"): "+data.length+" bytes");
+        if(forceResponsePort != 0){
+            System.out.println("SendUDP ("+host+":"+forceResponsePort+"): "+data.length+" bytes");
+        }else{
+            System.out.println("SendUDP ("+host+":"+port+"): "+data.length+" bytes");
+        }
         try {
             InetAddress address = InetAddress.getByName(host);
-            DatagramPacket datagram = new DatagramPacket(data, data.length, address, port); 
+            DatagramPacket datagram;
+            if(forceResponsePort != 0){
+                datagram = new DatagramPacket(data, data.length, address, forceResponsePort); 
+            }else{
+                datagram = new DatagramPacket(data, data.length, address, port); 
+            }
             socket.send(datagram);
             return true;
         } catch (Exception ex) {
