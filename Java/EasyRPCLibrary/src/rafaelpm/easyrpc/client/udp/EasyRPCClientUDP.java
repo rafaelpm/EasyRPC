@@ -37,7 +37,7 @@ public class EasyRPCClientUDP extends EasyRPCClientConnection {
         try{
             address = InetAddress.getByName(host);                            
             socket = new DatagramSocket();          
-            socket.setSoTimeout(5);
+            socket.setSoTimeout(50);
             return true;
         }catch(Exception e){
             e.printStackTrace();
