@@ -36,12 +36,18 @@ public class EasyRPCClientUDP extends EasyRPCClientConnection {
     public boolean connect() {
         try{
             address = InetAddress.getByName(host);                            
-            socket = new DatagramSocket();                    
+            socket = new DatagramSocket();          
+            socket.setSoTimeout(5);
             return true;
         }catch(Exception e){
             e.printStackTrace();
             return false;
         }        
+    }
+    
+    @Override
+    public int getDelayToConnect(){
+        return 0;
     }
 
     @Override
@@ -78,7 +84,8 @@ public class EasyRPCClientUDP extends EasyRPCClientConnection {
         try{
             byte[] buffer = new byte[4096];
             DatagramPacket response = new DatagramPacket(buffer, buffer.length);
-            socket.receive(response);
+            
+            socket.receive(response);            
             byte[] data = new byte[response.getLength()];
             System.arraycopy(buffer, response.getOffset(), data, 0, data.length);            
             return new DataInputStream(new ByteArrayInputStream(data));

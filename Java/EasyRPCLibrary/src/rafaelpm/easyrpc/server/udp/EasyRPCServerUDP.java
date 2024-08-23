@@ -48,6 +48,7 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
         try{
             server = new DatagramSocket(port);
             server.setBroadcast(enableBroadcast);
+            server.setSoTimeout(10);
             
             Thread thread = new Thread(this);
             thread.start();
@@ -74,14 +75,14 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             try {
                 //Aguarda receber
-                server.receive(packet);
-                if(packet != null){
-                    
+                server.receive(packet);                
+                if(packet.getLength() == 0){
+                    continue;
                 }
-                addClient(packet);                
-            } catch (IOException ex) {
-                Logger.getLogger(EasyRPCServerUDP.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (IOException ex) {                
+                continue;
+            }            
+            addClient(packet);
         }
     }
     

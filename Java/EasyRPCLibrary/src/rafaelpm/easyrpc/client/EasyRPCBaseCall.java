@@ -8,10 +8,6 @@ import rafaelpm.easyrpc.packages_build.BuildPackageFromServer;
 import rafaelpm.easyrpc.packages_build.BuildPackageToServer;
 import rafaelpm.easyrpc.packages_build.StatePackage;
 
-/**
- *
- * @author Rafael
- */
 public class EasyRPCBaseCall {
         
     public EasyRPCPackage easyRPCPackageSend;
@@ -24,8 +20,8 @@ public class EasyRPCBaseCall {
     /**
      * Delay between each read (milliseconds)
      */
-    private int delayBetweenRead = 100;
-    
+    private int delayBetweenRead = 5;
+        
     private int maxEmptyBufferTest = 3;
     
     public EasyRPCBaseCall(){
@@ -42,7 +38,9 @@ public class EasyRPCBaseCall {
                 if(connection.connect()){
                     break;
                 }
-                delay_ms(100);
+                if(connection.getDelayToConnect() > 0){
+                    delay_ms(connection.getDelayToConnect());
+                }
                 if(connection.isConnected()){
                     break;
                 }                
@@ -60,7 +58,7 @@ public class EasyRPCBaseCall {
         
         BuildPackageFromServer builderFromServerAck = new BuildPackageFromServer();
         builderFromServerAck.setMaxEmptyBufferTest(maxEmptyBufferTest);
-        while(builderFromServerAck.statePackage != StatePackage.Complete){
+        while(builderFromServerAck.statePackage != StatePackage.Complete){            
             delay_ms(delayBetweenRead);
             builderFromServerAck.setData(connection.receive());
             if(builderFromServerAck.statePackage == StatePackage.Error){                
@@ -75,13 +73,13 @@ public class EasyRPCBaseCall {
                         
         BuildPackageFromServer builderFromServer = new BuildPackageFromServer();
         builderFromServer.setMaxEmptyBufferTest(maxEmptyBufferTest*3);
-        while(builderFromServer.statePackage != StatePackage.Complete){
+        while(builderFromServer.statePackage != StatePackage.Complete){            
             delay_ms(delayBetweenRead);
             builderFromServer.setData(connection.receive());
             if(builderFromServer.statePackage == StatePackage.Error){                
                 finishSend();
                 return false;
-            }
+            }                
         }
         
         easyRPCPackageReceived = builderFromServer.easyPackage;    
