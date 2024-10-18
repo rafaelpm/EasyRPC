@@ -4,6 +4,10 @@
 /* ---------------------------------------------------------------------------*/
 #define VERSION "1.0.1"
 
+#ifndef uint8_t
+#define uint8_t unsigned char
+#endif
+
 enum {
     Both = 0,
     Server,

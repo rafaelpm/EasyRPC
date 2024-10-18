@@ -131,7 +131,8 @@ string TypeDataParser::TypeToNameSetFunction(TypeData type) {
 }
 /* ---------------------------------------------------------------------------*/
 TypeData TypeDataParser::NameToType(string* name) {
-	if (strcmp(name->c_str(), "int") == 0) {
+	if (strcmp(name->c_str(), "int") == 0 ||
+	strcmp(name->c_str(), "uint32_t") == 0) {
 		return Integer;
 	} else if (strcmp(name->c_str(), "float") == 0 ||
 		strcmp(name->c_str(), "double") == 0) {
