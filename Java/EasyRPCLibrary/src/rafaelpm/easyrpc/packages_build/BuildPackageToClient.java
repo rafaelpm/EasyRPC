@@ -28,7 +28,11 @@ public class BuildPackageToClient extends EasyRPCPackageBase {
             if(easyPackage.returnInfo.type == TypeData.BinaryArray.id){
                 setBinary(easyPackage.returnInfo.value_bin, dos);
             }else if(easyPackage.returnInfo.type != TypeData.Void.id){
-                setString(easyPackage.returnInfo.value, dos);            
+                if(easyPackage.returnInfo.value != null){
+                    setString(easyPackage.returnInfo.value, dos);
+                }else{
+                    setString("", dos);
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
