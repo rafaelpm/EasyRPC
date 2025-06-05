@@ -65,22 +65,29 @@ bool easyRPC_ServerLinuxUDP_Send(uint8_t *data, uint16_t dataLen){
     clientServerAddr.sin_addr.s_addr = inet_addr(ipClient);
     
     if (sendto(serverSocket, data, dataLen, 0, (struct sockaddr *)&clientServerAddr, sizeof(clientServerAddr)) == -1) {
-        printf("Fail to send data udp!\n");
+        #ifdef PRINT_DEBUG
+        printf("Server->SendLinuxUDP (%s:%d): Fail!\n", ipClient , clientServerAddr.sin_port);
+        #endif        
         return false;
     }
-    //printf("Send UDP - OK\n");
-    
+    #ifdef PRINT_DEBUG
+    printf("Server->SendLinuxUDP (%s:%d): OK!\n", ipClient , clientServerAddr.sin_port);
+    #endif        
     return true;
 }
 /* ---------------------------------------------------------------------------*/
 bool easyRPC_ServerLinuxUDP_Receive(uint8_t* data, uint16_t* bytesRead, uint16_t timeout){
     if(thread_udp.len == 0){
-        //printf("easyRPC_ServerLinuxUDP_Receive = false\n");
+        #ifdef PRINT_DEBUG
+        printf("Server->ReceiveUDP->thread_udp.len == 0\n");
+        #endif
         return false;
     }
     *bytesRead = thread_udp.len;
     memcpy(data,thread_udp.buffer,*bytesRead);
-    //printf("easyRPC_ServerLinuxUDP_Receive = %d\n",*bytesRead);
+    #ifdef PRINT_DEBUG
+        printf("easyRPC_ServerLinuxUDP_Receive = %d\n",*bytesRead);
+    #endif
     if(thread_udp.len - *bytesRead == 0){
         thread_udp.len = 0;
     }else{
@@ -113,12 +120,17 @@ void *threadReadDataFromUDPServerLinux(void *arg){
         }        
         inet_ntop(AF_INET, &(thread_udp.clientServerAddr.sin_addr), ipClient, INET_ADDRSTRLEN);
         portClient = ntohs(thread_udp.clientServerAddr.sin_port);
-        //printf("Endereço IP do cliente: %s:%d\n", ipClient, portClient);
+        #ifdef PRINT_DEBUG
+        printf("Server->Thread->IP: %s:%d\n", ipClient, portClient);
+        #endif
         
         thread_udp.len += recv_len;
         isServerConnected = true;
-        //printf("ReadUDP: %d / %d bytes\n",recv_len, thread_udp.len);
+        //#ifdef PRINT_DEBUG
+        printf("Server->Thread->ReadUDP: %d / %d bytes\n",recv_len, thread_udp.len);
+        //#endif
         processDataOnServer();
+        
     }
 
     pthread_exit(NULL);

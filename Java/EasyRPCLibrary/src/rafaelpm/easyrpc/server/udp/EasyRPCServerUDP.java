@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rafaelpm.easyrpc.debug.DebugControl;
 import rafaelpm.easyrpc.server.EasyRPCBaseBindClass;
 import rafaelpm.easyrpc.server.EasyRPCServerConnection;
 import rafaelpm.easyrpc.server.EasyRPCServerParser;
@@ -19,7 +20,7 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
     private int forceResponsePort = 0;
     private List<ChannelClientServerUDP> clients = new ArrayList<>();
     public EasyRPCServerParser easyRPCServerMatriz;
-    
+        
     public EasyRPCServerUDP(int port, boolean enableBroadcast){
         this.port = port;
         this.enableBroadcast = enableBroadcast;
@@ -85,17 +86,18 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
             addClient(packet);
         }
     }
-    
-    
+        
     private void addClient(DatagramPacket packet){
         for(ChannelClientServerUDP client: clients){
             if(client.isEqual(packet)){
+                DebugControl.printDebug("EasyRPCServerUDP->AddClient->Exist");
                 client.addData(packet);
                 return;
             }
         }
         
         //Not found
+        DebugControl.printDebug("EasyRPCServerUDP->AddClient->Add");
         ChannelClientServerUDP channelClientServerUDP = new ChannelClientServerUDP(this, packet);        
         channelClientServerUDP.setForceResponsePort(forceResponsePort);
         easyRPCServerMatriz.startThread(channelClientServerUDP);

@@ -12,6 +12,7 @@
 /* ---------------------------------------------------------------------------*/
 int clientSocket = INVALID_SOCKET;
 bool isConnected = false;
+char hostClient[INET_ADDRSTRLEN];
 struct sockaddr_in servAddr;
 struct sockaddr_in clientAddr;
 /* ---------------------------------------------------------------------------*/
@@ -40,10 +41,14 @@ bool easyRPC_ClientConnection_SendLinuxUDP(uint8_t *data, uint16_t dataLen){
     setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
 
     if (sendto(clientSocket, data, dataLen, 0, (struct sockaddr *)&clientAddr, sizeof(clientAddr)) == -1) {
-        //printf("Fail to send data udp!\n");
+        #ifdef PRINT_DEBUG
+        printf("Client->SendLinuxUDP (%s:%d): Fail!\n",hostClient , clientAddr.sin_port);
+        #endif
         return false;
     }
-    //printf("Send data udp => %d\n",clientAddr.sin_port);
+    #ifdef PRINT_DEBUG
+    printf("Client->SendLinuxUDP (%s:%d): OK\n",hostClient , clientAddr.sin_port);    
+    #endif    
     isConnected = true;
 
     return isConnected;
@@ -68,15 +73,16 @@ bool easyRPC_ClientConnection_ReceiveLinuxUDP(uint8_t* data, uint16_t *bytesRead
 
     struct sockaddr_in client_addr;
     socklen_t client_addr_len;
-
-    //printf("ReceiveLinuxUDP\n");
+#ifdef PRINT_DEBUG
+    //printf("Client->ReceiveLinuxUDP\n");
+#endif
 
     *bytesRead = 0;
     do{
         unitRead = recvfrom(clientSocket, data, SIZE_BUFFER_STREAM, 0,
                             (struct sockaddr*)&client_addr, &client_addr_len);
-        //printf("unitRead = %d / %d\n",unitRead, *bytesRead);
-        if(unitRead < 0){                        
+        
+        if(unitRead <= 0){                        
             if(*bytesRead > 0){
                 break;
             }
@@ -91,8 +97,12 @@ bool easyRPC_ClientConnection_ReceiveLinuxUDP(uint8_t* data, uint16_t *bytesRead
         if(*bytesRead >= 8){
             break;
         }
-        usleep(1000);
+        usleep(100000);
     }while(unitRead > 0);
+
+    #ifdef PRINT_DEBUG
+    printf("Client->ReceiveLinuxUDP->unitRead = %d / %d\n",unitRead, *bytesRead);
+    #endif
 
     return (*bytesRead >= 8);
 }
@@ -102,8 +112,10 @@ bool easyRPC_ClientLinuxUDP_Setup(char *host, int portClient) {
         return false;
     }
     memset(&clientAddr, 0, sizeof(clientAddr));
+    memset(&hostClient[0], 0, INET_ADDRSTRLEN);
     clientAddr.sin_family = AF_INET;
     clientAddr.sin_port = htons(portClient);
+    memcpy(&hostClient[0], host, strlen(host));
     //clientAddr.sin_addr.s_addr = inet_addr(host);
 
     if(inet_pton(AF_INET,host,&clientAddr.sin_addr) <= 0){
@@ -119,6 +131,11 @@ bool easyRPC_ClientLinuxUDP_Setup(char *host, int portClient) {
     if (bind(clientSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) < 0) {
         return false;
     }
+
+    #ifdef PRINT_DEBUG
+    printf("Client->Setup->Client: %s:%d\n", host, clientAddr.sin_port);
+    printf("Client->Setup->Server->Port: %d\n", servAddr.sin_addr , servAddr.sin_port);
+    #endif    
 
     easyRPC_ClientConnection_IsConnected = easyRPC_ClientConnection_IsConnectedLinuxUDP;
 	easyRPC_ClientConnection_Connect = easyRPC_ClientConnection_ConnectLinuxUDP;

@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rafaelpm.easyrpc.debug.Chronometer;
+import rafaelpm.easyrpc.debug.DebugControl;
 import rafaelpm.easyrpc.packages_build.BuildPackageFromClient;
 import rafaelpm.easyrpc.packages_build.BuildPackageToClient;
 import rafaelpm.easyrpc.packages_build.StatePackage;
+import rafaelpm.easyrpc.server.udp.ChannelClientServerUDP;
 
 /**
  *
@@ -17,13 +20,27 @@ public class EasyRPCServerParser implements Runnable {
     
     public List<EasyRPCBaseBindClass> classes = new ArrayList<>();        
     public ChannelClientServer channel;
+    private static int serialGlobal = 0;
+    private int serial = 0;
     
-    public EasyRPCServerParser(){
+    public int timeToBuildPackage = 100;
+    public int timeAfterSendACK = 100;
         
+    public EasyRPCServerParser(){                
+        serial = serialGlobal;
+        serialGlobal++;
     }
     
+    public void configTimesToUDP(){
+        timeToBuildPackage = 10;
+        timeAfterSendACK = 10;
+    }
+            
     public void startThread(ChannelClientServer channel){
         EasyRPCServerParser newThread = new EasyRPCServerParser();
+        if(channel instanceof ChannelClientServerUDP){
+            newThread.configTimesToUDP();
+        }
         newThread.classes.addAll(classes);
         newThread.channel = channel;
         Thread thread = new Thread(newThread);
@@ -31,32 +48,35 @@ public class EasyRPCServerParser implements Runnable {
     }
     
     private void onData() {
+        Chronometer chronometer = new Chronometer();
+        DebugControl.printDebug(serial+") EasyRPCServerParser->onData");
         BuildPackageFromClient builderFromClient = new BuildPackageFromClient();
         while(builderFromClient.statePackage != StatePackage.Complete){
             try {                
                 builderFromClient.setData(channel.receive());
                 if(builderFromClient.statePackage == StatePackage.Error){
-                    System.out.println("EasyRPCServer Error Package");
+                    DebugControl.printDebugError(serial+") EasyRPCServerParser->builderFromClient.setData: Error");
                     return;
                 }                
             } catch (Exception ex) {
                 Logger.getLogger(EasyRPCServerParser.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
-            delay_ms(100);
+            delay_ms(timeToBuildPackage);
         }
         
-        //System.out.println("Server->ACK");
+        DebugControl.printDebug(serial+") EasyRPCServerParser->Send ACK");        
         BuildPackageToClient buildPackageToClient = new BuildPackageToClient();        
         channel.send(buildPackageToClient.getAck());   
         
         resetTimeout();
-        delay_ms(100);
+        delay_ms(timeAfterSendACK);
         
-        //System.out.println("Server->Answer");
+        DebugControl.printDebug(serial+") EasyRPCServerParser->Find Function");
         for(EasyRPCBaseBindClass bindClass: classes){
             try {
                 if(bindClass.process(builderFromClient.easyPackage, bindClass)){                    
+                    DebugControl.printDebug(serial+") EasyRPCServerParser->Function found");
                     break;
                 }
             } catch (Exception ex) {
@@ -69,11 +89,11 @@ public class EasyRPCServerParser implements Runnable {
         resetTimeout();
         
         buildPackageToClient = new BuildPackageToClient();
-        //System.out.println("EasyRPCServer Sending Answer");
+        DebugControl.printDebug(serial+") EasyRPCServerParser->Send answer function");
         channel.send(buildPackageToClient.toBytes(builderFromClient.easyPackage));
         //channel.close();
         buildPackageToClient = null;
-        
+        chronometer.stop("EasyRPCServerParser");
     }
     
     private void delay_ms(int time){
@@ -109,7 +129,7 @@ public class EasyRPCServerParser implements Runnable {
             }
             delay_ms(100);
             if(isTimeout()){
-                //System.out.println("Timeout");
+                DebugControl.printDebugError("Timeout");
                 break;
             }
         }

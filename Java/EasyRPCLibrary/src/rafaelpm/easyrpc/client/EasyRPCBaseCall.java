@@ -20,8 +20,7 @@ public class EasyRPCBaseCall {
     /**
      * Delay between each read (milliseconds)
      */
-    private int delayBetweenRead = 5;
-        
+    private int delayBetweenRead = 5;        
     private int maxEmptyBufferTest = 3;
     
     public EasyRPCBaseCall(){
@@ -88,8 +87,7 @@ public class EasyRPCBaseCall {
     }
     
     private void finishSend(){
-        easyRPCPackageSend = new EasyRPCPackage();
-        
+        easyRPCPackageSend = new EasyRPCPackage();        
         //connection.disconnect();
     }
     
@@ -98,8 +96,6 @@ public class EasyRPCBaseCall {
             Thread.sleep(time);
         }catch(Exception e){}
     }
-    
-    
     
     public EasyRPCBaseCall setMaxEmptyBufferTest(int max){
         if(max < 1){

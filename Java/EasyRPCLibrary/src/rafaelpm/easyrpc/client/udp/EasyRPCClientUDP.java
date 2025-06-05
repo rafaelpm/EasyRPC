@@ -68,8 +68,7 @@ public class EasyRPCClientUDP extends EasyRPCClientConnection {
         /*Thread thread = new Thread(this);
         thread.start();*/
         try {            
-            DatagramPacket request = new DatagramPacket(data, data.length, address, port);
-            
+            DatagramPacket request = new DatagramPacket(data, data.length, address, port);            
             socket.send(request);
             sent = true;
             return true;

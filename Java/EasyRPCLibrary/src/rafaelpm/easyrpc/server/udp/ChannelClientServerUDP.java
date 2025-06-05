@@ -9,6 +9,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rafaelpm.easyrpc.debug.DebugControl;
 import rafaelpm.easyrpc.server.ChannelClientServer;
 
 public class ChannelClientServerUDP extends ChannelClientServer {
@@ -19,8 +20,7 @@ public class ChannelClientServerUDP extends ChannelClientServer {
     private ByteArrayOutputStream baos = new ByteArrayOutputStream();
     private EasyRPCServerUDP server;
     private int forceResponsePort = 0;
-    public static boolean printDebug = false;
-        
+            
     public ChannelClientServerUDP(EasyRPCServerUDP server, DatagramPacket packet){
         try {
             this.server = server;
@@ -84,13 +84,13 @@ public class ChannelClientServerUDP extends ChannelClientServer {
         if(!startSocket()){
             return false;
         }
-        if(printDebug){            
-            if(forceResponsePort != 0){
-                System.out.println("SendUDP ("+host+":"+forceResponsePort+"): "+data.length+" bytes");
-            }else{
-                System.out.println("SendUDP ("+host+":"+port+"): "+data.length+" bytes");
-            }
+        
+        if(forceResponsePort != 0){
+            DebugControl.printDebug("SendUDP ("+host+":"+forceResponsePort+"): "+data.length+" bytes");
+        }else{
+            DebugControl.printDebug("SendUDP ("+host+":"+port+"): "+data.length+" bytes");
         }
+        
         try {
             InetAddress address = InetAddress.getByName(host);
             DatagramPacket datagram;
