@@ -43,7 +43,7 @@ public class EasyRPCServerParser implements Runnable {
         }
         newThread.classes.addAll(classes);
         newThread.channel = channel;
-        Thread thread = new Thread(newThread);
+        Thread thread = new Thread(newThread, "ChannelClientServer");
         thread.start();
     }
     

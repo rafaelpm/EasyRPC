@@ -51,7 +51,7 @@ public class EasyRPCServerUDP extends EasyRPCServerConnection implements Runnabl
             server.setBroadcast(enableBroadcast);
             server.setSoTimeout(10);
             
-            Thread thread = new Thread(this);
+            Thread thread = new Thread(this,"EasyRPCServerUDP->listen");
             thread.start();
         }catch(Exception e){
             e.printStackTrace();

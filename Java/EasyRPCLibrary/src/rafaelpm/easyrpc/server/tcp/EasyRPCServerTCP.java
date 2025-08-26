@@ -52,7 +52,7 @@ public class EasyRPCServerTCP extends EasyRPCServerConnection implements Runnabl
 
     @Override
     public void listen() {
-        Thread thread = new Thread(this);
+        Thread thread = new Thread(this,"EasyRPCServerTCP->listen");
         thread.start();
     }
 
